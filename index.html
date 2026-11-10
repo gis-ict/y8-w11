@@ -2,170 +2,276 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
+<title>Nesting Lab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Y8 Nesting Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f1226;--panel:#181c3a;--panel2:#20254a;--ink:#eef0ff;--muted:#a9afd6;--line:#2e3566;--neon:#7cf5c8;--pink:#ff7ab6;--gold:#ffd166;--blue:#7aa8ff;--bad:#ff8a8a;--mono:"JetBrains Mono",Consolas,monospace}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-size:19px;line-height:1.45}
-button,input,textarea{font:inherit}button{cursor:pointer}
-code,pre,textarea.ed{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
-code{background:#2a2f5c;border-radius:6px;padding:0 6px;color:#ffe9a8;font-size:.92em}
-a{color:var(--neon)}
-header{position:sticky;top:0;z-index:20;background:rgba(15,18,38,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.hb{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.logo{font-weight:700;font-size:21px;white-space:nowrap}.logo span{color:var(--neon)}
-.xp{flex:1;min-width:200px;display:flex;align-items:center;gap:10px}
-.xbar{flex:1;height:14px;background:#2a2f5c;border-radius:9px;overflow:hidden}.xbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--blue));transition:width .5s}
-.xnum{font-weight:700;color:var(--gold);white-space:nowrap}.rank{font-size:15px;background:#2a2f5c;border-radius:999px;padding:2px 12px;white-space:nowrap}
-.badges{display:flex;gap:4px;font-size:22px}.badges span{opacity:.18;filter:grayscale(1);transition:.3s}.badges span.on{opacity:1;filter:none}
-nav{max-width:1200px;margin:0 auto;padding:0 16px 10px;display:flex;gap:8px;overflow-x:auto}
-nav button{flex:none;background:var(--panel);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700}
-nav button.on{background:var(--neon);color:#0f1226;border-color:var(--neon)}nav button .ck{color:var(--neon)}nav button.on .ck{color:#0f1226}
-main{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
-.zone{display:none}.zone.on{display:block;animation:fi .25s}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
-h1{font-size:40px;margin:0 0 6px;line-height:1.1}h2{font-size:32px;margin:0 0 6px}h3{margin:0 0 8px;font-size:22px}
-.sub{color:var(--muted);font-size:20px;margin:0 0 18px;max-width:900px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.grid2>*{min-width:0}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
-.chip{display:inline-block;background:#2a2f5c;border-radius:999px;padding:2px 12px;font-size:14px;font-weight:700;color:var(--neon);margin-bottom:8px}
-.btn{background:var(--neon);color:#0f1226;border:0;border-radius:12px;padding:10px 18px;font-weight:700}
-.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}.btn.sm{padding:6px 14px;font-size:17px}
-.btn:disabled{opacity:.4;cursor:default}
-.frame{position:relative;border-radius:14px;overflow:hidden;background:#0a0c1c;border:1px solid var(--line)}
+/* Layout: a "lab bench". Left rail = the learning path; right = one zone at a time. Nesting depth is colour-coded everywhere (loop blue, if pink, action amber). */
+:root{
+  --bg:#f3f6fa; --surface:#ffffff; --surface2:#e9eef5; --ink:#14213a; --muted:#56627a; --line:#d5dde8;
+  --accent:#0d6e78; --accent-ink:#ffffff; --xp:#b86e00;
+  --d1:#2f6fd6; --d2:#c2307a; --d3:#c27a00; --good:#1b7f4b; --bad:#c23a3a; --goodbg:#e4f4ea; --badbg:#fbe7e7;
+  --code-bg:#0f1b2d; --code-ink:#e8eef8; --code-muted:#7c8aa5; --hlfill:#ffd98a;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1420; --surface:#151f30; --surface2:#1d2a40; --ink:#e8eef8; --muted:#9fb0cc; --line:#2a3a55;
+  --accent:#4cc3cd; --accent-ink:#06222a; --xp:#ffbe5c; --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
+  --code-bg:#09111d; --code-ink:#e8eef8; --code-muted:#6d7d99; --hlfill:#6b4d16; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1420; --surface:#151f30; --surface2:#1d2a40; --ink:#e8eef8; --muted:#9fb0cc; --line:#2a3a55;
+  --accent:#4cc3cd; --accent-ink:#06222a; --xp:#ffbe5c; --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
+  --code-bg:#09111d; --code-ink:#e8eef8; --code-muted:#6d7d99; --hlfill:#6b4d16; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:19px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+code,pre,textarea.ed,.mono{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+code{background:var(--surface2);border-radius:6px;padding:.05em .4em;font-size:.88em}
+a{color:var(--accent);font-weight:700}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,4vw,44px);font-weight:800}h2{font-size:clamp(26px,3vw,34px);font-weight:800}h3{font-size:21px;font-weight:600}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:20px;color:var(--muted);max-width:62ch;margin:8px 0 0}
+p{margin:0}.stack{display:flex;flex-direction:column;gap:14px}
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topin{max-width:1240px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;white-space:nowrap}.brand span{color:var(--accent)}
+.meter{flex:1;min-width:220px;display:flex;align-items:center;gap:10px}
+.mbar{flex:1;height:10px;background:var(--surface2);border-radius:6px;overflow:hidden}.mbar i{display:block;height:100%;width:0;background:var(--xp);transition:width .5s}
+.xpn{font-weight:700;color:var(--xp);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rank{font-size:15px;font-weight:700;border:2px solid var(--line);border-radius:999px;padding:1px 10px;white-space:nowrap}
+.bdg{display:flex;gap:2px;font-size:20px}.bdg span{opacity:.2;filter:grayscale(1)}.bdg span.on{opacity:1;filter:none}
+/* shell */
+.shell{max-width:1240px;margin:0 auto;padding-block:24px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);display:flex;flex-direction:column;gap:4px}
+.rail button{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;text-align:left;background:none;border:0;border-radius:12px;padding:9px 10px;font-weight:700;color:var(--muted)}
+.rail button .k{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:2px solid var(--line);font-variant-numeric:tabular-nums}
+.rail button:hover{background:var(--surface2);color:var(--ink)}
+.rail button.on{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--accent)}
+.rail button.on .k{border-color:var(--accent);color:var(--accent)}
+.rail button.done .k{background:var(--good);border-color:var(--good);color:var(--surface)}
+.rail button .x{display:block;font-size:13px;color:var(--xp);font-variant-numeric:tabular-nums;font-weight:700}.rail .lbl{line-height:1.25}
+.zone{display:none}.zone.on{display:flex;flex-direction:column;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-width:0}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.wide{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;font-weight:700}
+.btn.ghost{background:none;color:var(--ink);border:2px solid var(--line)}.btn.sm{padding:6px 14px;font-size:17px}.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* nesting diagram */
+.nest{border:3px solid var(--d1);border-radius:14px;padding:26px 14px 14px;position:relative}
+.nest .nest{border-color:var(--d2);margin-top:10px}.nest .nest .nest{border-color:var(--d3)}
+.nest>b{position:absolute;top:-14px;left:14px;background:var(--surface);padding:0 8px;font-size:16px;color:var(--d1)}
+.nest .nest>b{color:var(--d2)}.nest .nest .nest>b{color:var(--d3)}
+.nest>span{font-size:17px}
+.projmap{display:grid;grid-template-columns:1fr;gap:8px}
+.projmap div{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg)}
+.projmap b{font-family:var(--display);font-size:18px;margin-right:6px}.projmap span{font-size:16px;color:var(--muted)}
+.kw{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.kw div{border-left:4px solid var(--accent);background:var(--bg);border-radius:0 10px 10px 0;padding:6px 12px}
+.kw b{display:block}.kw span{font-size:16px;color:var(--muted)}
+/* code with depth guides */
+pre.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:12px 0;margin:0;overflow-x:auto;font-size:16px;line-height:1.65}
+pre.code .l{display:block;padding:0 16px;white-space:pre;border-left:4px solid transparent;transition:background .2s}
+pre.code .l.hl{background:rgba(255,190,92,.3);border-left-color:var(--xp);font-weight:600}
+.ind{display:inline-block;width:4ch;height:1.65em;vertical-align:top;border-left:2px solid}
+.ind.i1{border-color:var(--d1)}.ind.i2{border-color:var(--d2)}.ind.i3{border-color:var(--d3)}
+/* questions */
+.q{display:flex;flex-direction:column;gap:8px}.q p.qq{font-weight:700}
+.opts{display:grid;gap:8px}.opts button{text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:9px 12px}
+.opts button:hover{border-color:var(--accent)}.opts button.right{border-color:var(--good);background:var(--goodbg)}.opts button.wrong{border-color:var(--bad);background:var(--badbg)}
+.fb{border-radius:10px;padding:8px 12px;font-size:17px}.fb.ok{background:var(--goodbg)}.fb.no{background:var(--badbg)}
+/* embeds */
+.frame{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface2)}
 .frame iframe{display:block;width:100%;border:0;background:#fff}
-.frame .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:260px;text-align:center;padding:20px;color:var(--muted)}
-.fall{font-size:15px;color:var(--muted);margin:6px 0 0}
-.kw{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
-.kw div{background:var(--panel2);border-radius:12px;padding:8px 12px}.kw b{display:block;color:var(--neon)}.kw span{font-size:16px;color:var(--muted)}
-.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:18px}
-.zones button{text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:14px;color:var(--ink)}
-.zones button:hover{border-color:var(--neon)}.zones button b{display:block;font-size:20px}.zones button span{font-size:15px;color:var(--muted)}.zones button i{font-style:normal;font-size:34px}
-.dolls{display:flex;justify-content:center;padding:10px 0}
-.box{border:3px solid var(--blue);border-radius:16px;padding:22px 14px 14px;position:relative;text-align:center;min-width:120px}
-.box>b{position:absolute;top:-13px;left:14px;background:var(--panel);padding:0 8px;font-size:15px}
-.box.l1{border-color:var(--blue)}.box.l1>b{color:var(--blue)}.box.l2{border-color:var(--pink);margin-top:6px}.box.l2>b{color:var(--pink)}
-.box.l3{border-color:var(--gold);margin-top:6px}.box.l3>b{color:var(--gold)}
-.dollanim .box.l2{animation:pulse 2.4s infinite}@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(255,122,182,.25)}}
-.q{margin-top:14px}.q p{font-weight:700;margin:0 0 8px}
-.opts{display:grid;gap:8px}.opts button{text-align:left;background:var(--panel2);border:2px solid var(--line);border-radius:12px;padding:8px 12px;color:var(--ink)}
-.opts button.right{border-color:var(--neon);background:#173d36}.opts button.wrong{border-color:var(--bad);background:#43222b}
-.fb{margin-top:8px;border-radius:10px;padding:8px 12px;font-size:17px}.fb.ok{background:#173d36}.fb.no{background:#43222b}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--gold);color:#0f1226;font-weight:700;border-radius:999px;padding:10px 20px;z-index:50;transition:transform .35s;box-shadow:0 10px 30px rgba(0,0,0,.4)}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.slider{width:100%;accent-color:var(--neon)}
-.ed{display:flex;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#0b0d1d}.ed:focus-within{border-color:var(--neon)}
-.ed .gut{padding:12px 8px;color:#5c6396;font-family:var(--mono);font-size:16px;line-height:1.55;text-align:right;white-space:pre;background:#12152c;user-select:none}
-.ed textarea{flex:1;min-width:0;border:0;outline:0;resize:vertical;background:transparent;color:#eef0ff;font-size:16px;line-height:1.55;padding:12px;white-space:pre;overflow-x:auto;tab-size:4}
-pre.out{background:#06140f;color:#bdf7d9;border-radius:12px;padding:10px 14px;margin:10px 0 0;min-height:48px;white-space:pre-wrap;font-size:16px}
-pre.out .e{color:var(--bad)}
-.chs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.chs button{background:var(--panel2);border:2px solid var(--line);color:var(--ink);border-radius:12px;padding:8px 14px;font-weight:700}
-.chs button.on{border-color:var(--neon)}.chs button.done{background:#173d36}
-.dash{max-width:760px;margin:0 auto;text-align:center}
-.dstat{display:flex;justify-content:space-between;font-weight:700;font-size:22px;margin-bottom:10px}.dstat .t{color:var(--gold)}.dstat .c{color:var(--pink)}
-.dcard{background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:16px;text-align:left;transition:border-color .2s}
-.dcard.ok{border-color:var(--neon)}.dcard.no{border-color:var(--bad)}
-.dcard .job{font-size:21px;font-weight:700;margin:0 0 10px;text-align:center}
-.dcode{background:#0b0d1d;border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:18px;white-space:pre;overflow-x:auto;line-height:1.6}
-.dcode .slot{background:#2a2f5c;border:2px dashed var(--gold);border-radius:6px;padding:0 6px;color:var(--gold)}
-.dbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.dbtns button{background:var(--panel2);border:2px solid var(--line);border-radius:14px;padding:12px 6px;color:var(--ink);font-weight:700;font-size:18px}
-.dbtns button small{display:block;font-family:var(--mono);color:var(--muted);font-size:14px}
-.dbtns button:hover:not(:disabled){border-color:var(--neon)}
-.myline{margin-top:10px;font-size:17px;color:var(--muted)}
-.blist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.blist div{background:var(--panel2);border-radius:14px;padding:10px 12px;opacity:.45}.blist div.on{opacity:1;border:2px solid var(--gold)}
-.blist b{display:block;font-size:19px}.blist span{font-size:15px;color:var(--muted)}
-input.txt{width:100%;background:#0b0d1d;border:2px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--ink)}
-@media (max-width:820px){.grid2{grid-template-columns:1fr}h1{font-size:30px}h2{font-size:26px}.badges{font-size:18px}.dcode{font-size:15px}.dbtns button{font-size:16px}}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:240px;padding:20px;text-align:center;color:var(--muted)}
+.ph b{color:var(--ink);font-family:var(--display);font-size:22px}
+.note{font-size:16px;color:var(--muted)}
+/* three ways */
+.three{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.95fr);gap:16px;align-items:start}
+.three h3{font-size:17px;margin-bottom:6px}
+svg.fc{width:100%;max-width:330px;display:block;margin:auto}
+svg.fc .n{fill:var(--surface);stroke:var(--muted);stroke-width:2;transition:fill .25s,stroke .25s}
+svg.fc .n.d.loop{stroke:var(--d1)}svg.fc .n.d.if{stroke:var(--d2)}
+svg.fc .n.hl{fill:var(--hlfill);stroke:var(--xp);stroke-width:3}
+svg.fc text{font:14px var(--body);fill:var(--ink);text-anchor:middle}svg.fc text.lab{font-size:12px;font-weight:700;fill:var(--muted)}
+svg.fc .ar,svg.fc .ln{stroke:var(--muted);stroke-width:2;fill:none}svg.fc .ar{marker-end:url(#ah)}svg.fc .ahd{fill:var(--muted)}svg.fc .back{stroke:var(--d1);stroke-dasharray:5 4}
+.stepbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stepbar .sn{font-weight:700;font-variant-numeric:tabular-nums}
+.stepnote{background:var(--bg);border-left:4px solid var(--xp);border-radius:0 10px 10px 0;padding:8px 12px}
+/* playground */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;text-align:left}
+.tabs button small{display:block;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tabs button.on{border-color:var(--accent)}.tabs button.done{background:var(--goodbg);border-color:var(--good)}
+.ed{display:flex;border-radius:12px;overflow:hidden;background:var(--code-bg);border:2px solid var(--code-bg)}.ed:focus-within{border-color:var(--accent)}
+.ed .gut{padding:12px 8px;color:var(--code-muted);font-family:var(--mono);font-size:16px;line-height:1.6;text-align:right;white-space:pre;user-select:none}
+.ed textarea{flex:1;min-width:0;border:0;outline:0;resize:vertical;background:transparent;color:var(--code-ink);font-size:16px;line-height:1.6;padding:12px;white-space:pre;overflow-x:auto;tab-size:4}
+pre.out{background:var(--surface2);border-radius:12px;padding:10px 14px;margin:0;min-height:48px;white-space:pre-wrap;font-size:16px}
+pre.out .e{color:var(--bad);font-weight:700}pre.out .ok{color:var(--good);font-weight:700}
+/* dash */
+.dash{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.dstat{display:flex;justify-content:space-between;font-weight:700;font-size:21px;font-variant-numeric:tabular-nums}.dstat .t{color:var(--xp)}.dstat .c{color:var(--d2)}
+.dcard{border:3px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
+.dcard.ok{border-color:var(--good)}.dcard.no{border-color:var(--bad)}
+.job{font-weight:700;font-size:20px;text-align:center}
+.slot{background:rgba(255,190,92,.22);outline:2px dashed var(--xp);border-radius:4px;padding:0 4px}
+.dbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dbtns button{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 6px;font-weight:700}
+.dbtns button small{display:block;font-family:var(--mono);font-size:13px;color:var(--muted);white-space:pre}
+.dbtns button.i1{border-bottom:4px solid var(--d1)}.dbtns button.i2{border-bottom:4px solid var(--d2)}
+.res{font-size:17px;text-align:center;min-height:1.5em}
+/* badges */
+.blist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.blist div{border:2px dashed var(--line);border-radius:14px;padding:12px 14px;opacity:.6}
+.blist div.on{border-style:solid;border-color:var(--xp);opacity:1}
+.blist b{display:block;font-family:var(--display);font-size:19px}.blist span{font-size:16px;color:var(--muted)}
+input.txt{width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--ink);color:var(--surface);font-weight:700;border-radius:999px;padding:10px 20px;z-index:40;transition:transform .3s}
+.toast.show{transform:translate(-50%,0)}
+.slider{width:100%;accent-color:var(--accent)}
+@media (max-width:980px){.three{grid-template-columns:1fr}}
+@media (max-width:860px){.shell{grid-template-columns:1fr}.rail{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail button{grid-template-columns:auto auto;white-space:nowrap;flex:none;border:2px solid var(--line);background:var(--surface)}.rail button .x{display:none}
+  .two,.wide,.projmap{grid-template-columns:1fr}.bdg{font-size:17px}body{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<header>
-  <div class="hb"><div class="logo">🧪 Nesting <span>Lab</span></div>
-    <div class="xp"><div class="xbar"><i id="xbar"></i></div><span class="xnum" id="xnum">0 XP</span><span class="rank" id="rank">Rookie</span></div>
-    <div class="badges" id="badges"></div></div>
-  <nav id="nav"></nav>
-</header>
+
+<header class="top"><div class="topin">
+  <div class="brand">Nesting <span>Lab</span></div>
+  <div class="meter"><div class="mbar"><i id="mbar"></i></div><span class="xpn" id="xpn">0 XP</span><span class="rank" id="rank">Rookie</span></div>
+  <div class="bdg" id="bdg" aria-label="Badges"></div>
+</div></header>
+
+<div class="shell">
+<nav class="rail" id="rail" aria-label="Zones"></nav>
 <main>
 
-<section class="zone" data-z="home" data-n="🏠 Start">
-  <span class="chip">Year 8 · supplemental learning · explore at your own pace</span>
-  <h1>Welcome to the Nesting Lab 🧪</h1>
-  <p class="sub">Your programs need <b>nesting</b>: one structure <b>inside</b> another. Explore the zones in any order. Every zone earns <b>XP</b> and badges. Mistakes cost nothing, so try things!</p>
-  <div class="grid2">
-    <div class="panel"><h3>Nesting in one picture</h3>
-      <div class="dolls dollanim"><div class="box l1"><b>🔁 loop</b>repeats…<div class="box l2"><b>🔀 if</b>checks each time…<div class="box l3"><b>▶ action</b>runs only when True</div></div></div></div>
-      <p style="margin:6px 0 0;font-size:17px;color:var(--muted)">Like Russian dolls 🪆: the <b>if</b> sits inside the <b>loop</b>, so it is checked <b>every time</b> the loop goes round. In Python, <b>indentation</b> shows what is inside what.</p></div>
-    <div class="panel"><h3>📖 Key words</h3><div class="kw" id="kw" style="margin-top:0"></div></div>
+<section class="zone" data-z="start" data-t="What is nesting?">
+  <div><p class="eyebrow">Year 8 · Homework to explore · Links to today's lesson, station 4</p>
+  <h1>Nesting: a decision inside a loop</h1>
+  <p class="lead">Today you chose a project and planned it. Every option needs <b>nesting</b>: one structure placed <b>inside</b> another. Work through the zones in order, earn XP and badges, and try again as often as you like.</p></div>
+  <div class="two">
+    <div class="panel stack"><h3>Picture it as boxes inside boxes</h3>
+      <div class="nest"><b>loop</b><span>repeats the steps inside it</span>
+        <div class="nest"><b>if</b><span>is checked every time the loop goes round</span>
+          <div class="nest"><b>action</b><span>runs only when the condition is True</span></div></div></div>
+      <p class="note">The colours stay the same on every page of the Lab: <b style="color:var(--d1)">blue</b> = loop level, <b style="color:var(--d2)">pink</b> = if level, <b style="color:var(--d3)">amber</b> = one more level in.</p></div>
+    <div class="panel stack"><h3>Where nesting is in your project</h3>
+      <div class="projmap"><div><b>Revision quiz</b><span>For each question, <i>if</i> the guess is right, add a point.</span></div>
+        <div><b>Unit converter</b><span>While the user hasn't quit, <i>if</i> they chose 1, convert km.</span></div>
+        <div><b>Text game</b><span>While lives are left, <i>if</i> they pick the dragon door, lose a life.</span></div></div>
+      <div id="q-start"></div></div>
   </div>
-  <div class="zones" id="zoneCards"></div>
+  <div class="panel stack"><h3>Key words</h3><div class="kw" id="kw"></div></div>
 </section>
 
-<section class="zone" data-z="watch" data-n="🎬 Watch">
-  <h2>🎬 Watch and think</h2><p class="sub">A short clip, then two quick questions. You can try again as many times as you like.</p>
-  <div class="grid2">
-    <div><div class="frame" id="ytFrame"><div class="ph"><div style="font-size:48px">▶</div><b>Nested loops (Bro Code)</b><button class="btn" id="ytLoad">Load the video (+10 XP)</button></div></div>
-      <p class="fall">Not loading? <a href="https://www.youtube.com/watch?v=APWy6Pc83gE" target="_blank" rel="noopener">Open it on YouTube ↗</a></p></div>
-    <div class="panel" id="watchQ"></div>
-  </div>
-</section>
-
-<section class="zone" data-z="maze" data-n="🧩 Play">
-  <h2>🧩 Play: Blockly Maze</h2><p class="sub">Guide the person to the end. From <b>level 6</b>, you need an <b>if</b> inside a <b>repeat</b>: that's nesting!</p>
-  <div class="grid2" style="grid-template-columns:1.6fr 1fr">
-    <div><div class="frame" id="mzFrame"><div class="ph"><div style="font-size:48px">🧩</div><b>Blockly Games: Maze</b><span>Free, made by Google, no login.</span><button class="btn" id="mzLoad">Start the game</button></div></div>
-      <p class="fall">Not loading in the page? <a href="https://blockly.games/maze?lang=en&level=6" target="_blank" rel="noopener">Open Maze in a new tab ↗</a></p></div>
-    <div class="panel"><h3>Your progress</h3><p style="margin:0 0 6px;font-size:17px;color:var(--muted)">Slide to the highest level you finished. +10 XP for every level.</p>
-      <input type="range" class="slider" id="mzLevel" min="0" max="10" value="0"><p class="xnum" id="mzOut" style="margin:6px 0 0">Level 0</p>
-      <div id="mzQin"></div></div>
-  </div>
-</section>
-
-<section class="zone" data-z="trace" data-n="🔍 See it">
-  <h2>🔍 See it run: Python Tutor</h2><p class="sub">Press <b>Next ></b> to run one line at a time. Watch which lines run <b>inside</b> the loop and the if.</p>
-  <div class="grid2" style="grid-template-columns:1.6fr 1fr">
-    <div><div class="frame" id="ptFrame"><div class="ph"><div style="font-size:48px">🔍</div><b>Python Tutor</b><span>Free, no login.</span><button class="btn" id="ptLoad">Load the visualiser</button></div></div>
-      <p class="fall">Not loading? <a href="https://pythontutor.com/visualize.html#code=score%20%3D%200%0Aanswers%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20i%20in%20range%28len%28answers%29%29%3A%0A%20%20%20%20if%20answers%5Bi%5D%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0Aprint%28%22Score%3A%22%2C%20score%29&amp;codeDivHeight=400&amp;codeDivWidth=350&amp;cumulative=false&amp;curInstr=0&amp;heapPrimitives=nevernest&amp;origin=opt-frontend.js&amp;py=3&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false&amp;mode=display" target="_blank" rel="noopener">Open it in Python Tutor ↗</a></p></div>
-    <div class="panel"><h3>Trace challenges</h3><div id="ptQ"></div></div>
-  </div>
-</section>
-
-<section class="zone" data-z="code" data-n="💻 Code">
-  <h2>💻 Code playground</h2><p class="sub">Real Python, right here. Change the code, press <b>Run</b>. Pass a challenge for <b>+50 XP</b>. Hints are free.</p>
-  <div class="chs" id="chs"></div>
-  <div class="grid2">
-    <div><div class="panel"><h3 id="chT"></h3><p id="chG" style="margin:0 0 6px"></p><button class="btn alt sm" id="chHint">💡 Hint</button><p id="chH" style="display:none;font-size:17px;color:var(--muted);margin:8px 0 0"></p>
-      <p style="margin:12px 0 4px;font-size:16px;color:var(--muted)">Expected output:</p><pre class="out" id="chW" style="margin:0"></pre></div></div>
-    <div><div class="ed"><div class="gut" id="gut"></div><textarea class="ed" id="ed" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" id="run">▶ Run</button><button class="btn alt sm" id="reset">↺ Reset</button></div>
-      <pre class="out" id="out">Output appears here. (The first run loads Python, a few seconds.)</pre></div>
+<section class="zone" data-z="three" data-t="Same idea, three ways">
+  <div><p class="eyebrow">Links to stations 5 and 6: pseudocode and flowchart</p><h2>Same idea, three ways</h2>
+  <p class="lead">Step through the quiz plan. Watch the same step light up in the pseudocode, the Python and the flowchart.</p></div>
+  <div class="panel stack">
+    <div class="stepbar"><button class="btn ghost sm" id="sPrev">← Back</button><button class="btn sm" id="sNext">Next step →</button><span class="sn" id="sNum"></span></div>
+    <div class="stepnote"><b id="sT"></b> <span id="sN"></span></div>
+    <div class="three">
+      <div><h3>Pseudocode</h3><pre class="code" id="psCode"></pre></div>
+      <div><h3>Python</h3><pre class="code" id="pyCode"></pre></div>
+      <div><h3>Flowchart</h3><svg viewBox="0 0 400 520" class="fc" role="img" aria-label="Flowchart of the quiz loop with a nested decision">
+<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="ahd"/></marker></defs>
+<rect id="fc-start" class="n term" x="150" y="6" width="100" height="32" rx="16"/><text x="200" y="27">Start</text>
+<path class="ar" d="M200 38 V54"/>
+<rect id="fc-init" class="n" x="140" y="56" width="120" height="34"/><text x="200" y="78">score ← 0</text>
+<path class="ar" d="M200 90 V112"/>
+<polygon id="fc-loopq" class="n d loop" points="200,114 290,152 200,190 110,152"/><text x="200" y="148">another</text><text x="200" y="165">question?</text>
+<path class="ar" d="M200 190 V212"/><text x="208" y="206" class="lab">yes</text>
+<polygon id="fc-inp" class="n" points="145,214 270,214 255,246 130,246"/><text x="200" y="235">INPUT guess</text>
+<path class="ar" d="M200 246 V266"/>
+<polygon id="fc-dec" class="n d if" points="200,268 282,304 200,340 118,304"/><text x="200" y="300">guess =</text><text x="200" y="317">answer?</text>
+<path class="ar" d="M118 304 H70 V360"/><text x="80" y="296" class="lab">yes</text>
+<rect id="fc-yes" class="n" x="20" y="362" width="100" height="34"/><text x="70" y="384">score + 1</text>
+<path class="ar" d="M282 304 H330 V360"/><text x="296" y="296" class="lab">no</text>
+<rect id="fc-no" class="n" x="280" y="362" width="100" height="34"/><text x="330" y="384">"Wrong"</text>
+<path class="ln" d="M70 396 V416 H392"/><path class="ln" d="M330 396 V416"/><path class="ar back" d="M392 416 V100 H204"/>
+<path class="ar" d="M110 152 H10 V470 H138"/><text x="92" y="144" class="lab">no</text>
+<polygon id="fc-out" class="n" points="150,456 270,456 255,488 135,488"/><text x="202" y="477">OUTPUT score</text>
+<path class="ar" d="M200 488 V500"/><rect id="fc-end" class="n term" x="160" y="500" width="80" height="18" rx="9"/>
+</svg></div>
+    </div>
   </div>
 </section>
 
-<section class="zone" data-z="dash" data-n="⚡ Indent Dash">
-  <h2>⚡ Indent Dash</h2><p class="sub">45 seconds. Where does the line go? Pick <b>how far to indent it</b>. 3 in a row = combo ×2!</p>
+<section class="zone" data-z="watch" data-t="Watch: loops in loops">
+  <div><h2>Watch: a loop inside a loop</h2><p class="lead">Bro Code shows nesting with loops. Watch the first few minutes, then answer.</p></div>
+  <div class="two wide">
+    <div class="stack"><div class="frame" id="ytFrame"><div class="ph"><b>Nested loops in Python</b><span>Bro Code · short clip</span><button class="btn" id="ytLoad">Play the video</button></div></div>
+      <p class="note">Video blocked at school? <a href="https://www.youtube.com/watch?v=APWy6Pc83gE" target="_blank" rel="noopener">Open it on YouTube</a></p></div>
+    <div class="panel" id="q-watch"></div>
+  </div>
+</section>
+
+<section class="zone" data-z="trace" data-t="Trace it: Python Tutor">
+  <div><h2>Trace it in Python Tutor</h2><p class="lead">Python Tutor runs code one line at a time. Press <b>Next</b> and watch which lines run inside the loop and inside the if.</p></div>
+  <div class="two wide">
+    <div class="stack"><div class="frame" id="ptFrame"><div class="ph"><b>Python Tutor</b><span>Free, no login</span><button class="btn" id="ptLoad">Load the visualiser</button></div></div>
+      <p class="note">Not showing? <a href="https://pythontutor.com/visualize.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&amp;codeDivHeight=400&amp;codeDivWidth=350&amp;cumulative=false&amp;curInstr=0&amp;heapPrimitives=nevernest&amp;origin=opt-frontend.js&amp;py=3&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false&amp;mode=display" target="_blank" rel="noopener">Open it in Python Tutor</a></p></div>
+    <div class="panel" id="q-trace"></div>
+  </div>
+</section>
+
+<section class="zone" data-z="code" data-t="Code: your project">
+  <div><h2>Code a small piece of your project</h2><p class="lead">Each challenge is a tiny part of one project option. Real Python runs in the page. Pass one for 50 XP. Hints are free.</p></div>
+  <div class="tabs" id="chTabs"></div>
+  <div class="two">
+    <div class="panel stack"><h3 id="chT"></h3><p id="chG"></p><div class="row"><button class="btn ghost sm" id="chHint">Show a hint</button></div><p id="chH" class="note" hidden></p>
+      <p class="eyebrow">Expected output</p><pre class="out" id="chW"></pre></div>
+    <div class="stack"><div class="ed"><div class="gut" id="gut"></div><textarea class="ed" id="ed" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python code"></textarea></div>
+      <div class="row"><button class="btn" id="run">Run</button><button class="btn ghost sm" id="reset">Reset code</button><span class="note" id="resetAsk" hidden>Sure? <button class="btn ghost sm" id="resetYes">Yes, reset</button></span></div>
+      <pre class="out" id="out">Output appears here. The first run loads Python (a few seconds).</pre></div>
+  </div>
+</section>
+
+<section class="zone" data-z="robot" data-t="Play: Reeborg's robot">
+  <div><h2>Play: steer a robot with real Python</h2><p class="lead"><b>Reeborg's World</b> is a free robot puzzle. You write Python, the robot follows it. The hurdle worlds need an <code>if</code> inside a <code>while</code>.</p></div>
+  <div class="two wide">
+    <div class="stack"><div class="frame" id="rbFrame"><div class="ph"><b>Reeborg's World</b><span>Free, no login</span><button class="btn" id="rbLoad">Open the robot here</button></div></div>
+      <p class="note">Too small, or not showing? <a href="https://reeborg.ca/reeborg.html?lang=en&mode=python" target="_blank" rel="noopener">Open Reeborg's World in a new tab</a></p></div>
+    <div class="panel stack"><h3>Mission 1: Hurdle 3</h3>
+      <p>In Reeborg, open the <b>World</b> menu and choose <b>Hurdle 3</b>. Type this, then press the run button:</p>
+      <pre class="code" id="rb1"></pre>
+      <h3>Boss mission: Hurdle 4</h3><p>The walls are different heights. Your <code>jump()</code> needs its own <code>while</code> loops, so there is a loop inside an if inside a loop.</p>
+      <div class="row"><button class="btn ghost sm" id="rbHint">Show the boss hint</button></div><pre class="code" id="rb2" hidden></pre>
+      <p class="eyebrow">Which missions did you finish?</p><div class="row" id="rbDone"></div></div>
+  </div>
+</section>
+
+<section class="zone" data-z="dash" data-t="Game: Indent Dash">
+  <div><h2>Indent Dash</h2><p class="lead">45 seconds. A line needs a home. Choose how far to indent it. Three right in a row doubles your points.</p></div>
   <div class="dash">
-    <div class="dstat"><span>Score: <span id="dS">0</span></span><span class="t" id="dT">45</span><span class="c" id="dC">combo ×1</span></div>
-    <div class="dcard" id="dCard"><p class="job" id="dJob">Press Start!</p><div class="dcode" id="dCode">for i in range(3):
-    <span class="slot">▢ ?</span></div>
-      <div class="dbtns"><button data-i="0" disabled>No indent<small>|line</small></button><button data-i="1" disabled>1 level ⇥<small>|····line</small></button><button data-i="2" disabled>2 levels ⇥⇥<small>|········line</small></button></div>
-      <p class="myline" id="dLine"></p></div>
-    <button class="btn" id="dGo" style="margin-top:14px">▶ Start</button><p class="xnum" id="dBest" style="margin:10px 0 0"></p>
+    <div class="dstat"><span>Score <span id="dS">0</span></span><span class="t" id="dT">45</span><span class="c" id="dC">×1</span></div>
+    <div class="dcard" id="dCard"><p class="job" id="dJob">Press Start</p><pre class="code" id="dCode"></pre>
+      <div class="dbtns"><button data-i="0" disabled>No indent<small>line</small></button><button data-i="1" class="i1" disabled>1 level<small>····line</small></button><button data-i="2" class="i2" disabled>2 levels<small>········line</small></button></div>
+      <p class="res" id="dRes"></p></div>
+    <div class="row" style="justify-content:center"><button class="btn" id="dGo">Start</button><span class="xpn" id="dBest"></span></div>
+    <p class="note" style="text-align:center">Keyboard: press 0, 1 or 2.</p>
   </div>
 </section>
 
-<section class="zone" data-z="badges" data-n="🏅 Badges">
-  <h2>🏅 Your badges</h2><p class="sub">Collect them all. Share your XP with your teacher if you like (optional).</p>
+<section class="zone" data-z="badges" data-t="Badges">
+  <div><h2>Your badges</h2><p class="lead">Collect all seven. Sharing your XP with your teacher is optional.</p></div>
   <div class="blist" id="blist"></div>
-  <div class="panel" style="margin-top:18px;max-width:640px"><h3>📤 Share my progress (optional)</h3>
-    <div class="grid2" style="gap:10px"><input class="txt" id="nm" placeholder="Your name"><input class="txt" id="cls" placeholder="Class, e.g. 8A"></div>
-    <button class="btn" id="send" style="margin-top:10px">Send my XP</button><p id="sendMsg" style="margin:8px 0 0"></p></div>
+  <div class="panel stack" style="max-width:640px"><h3>Share my progress</h3>
+    <div class="two" style="gap:10px"><input class="txt" id="nm" placeholder="Your name" aria-label="Your name"><input class="txt" id="cls" placeholder="Class, e.g. 8A" aria-label="Class"></div>
+    <div class="row"><button class="btn" id="send">Send my XP</button><span id="sendMsg" class="note"></span></div></div>
 </section>
 
-</main>
-<div class="toast" id="toast"></div>
+</main></div>
+<div class="toast" id="toast" role="status"></div>
 <script type="text/plain" id="harness">
 import sys, io, traceback, js
 class _Stop(Exception):
@@ -217,105 +323,108 @@ def run_code(src, inputs, interactive):
     return [s, err]
 </script>
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbwUrLnXjM_bDseaTCzHlZ_U-plyEvTrtwLpZF8KSN8JcE7ukzz4FXTJPXxul6LUSNOdzQ/exec";
-const PYODIDE_URL="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js";
-const PT="https://pythontutor.com/iframe-embed.html#code=score%20%3D%200%0Aanswers%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20i%20in%20range%28len%28answers%29%29%3A%0A%20%20%20%20if%20answers%5Bi%5D%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0Aprint%28%22Score%3A%22%2C%20score%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false";
-const CH=[{"id": "even", "title": "Even numbers only", "goal": "Print only the <b>even</b> numbers from 1 to 10. Put an <code>if</code> <b>inside</b> the loop.", "start": "for n in range(1, 11):\n    print(n)", "want": ["2", "4", "6", "8", "10"], "hint": "Add <code>if n % 2 == 0:</code> inside the loop, and indent the print under it."}, {"id": "rect", "title": "Draw a rectangle", "goal": "Print 3 rows of <code>####</code>. Put a loop <b>inside</b> a loop.", "start": "for row in range(3):\n    print(\"#\")", "want": ["####", "####", "####"], "hint": "Inside the row loop: <code>for col in range(4):</code> then <code>print(\"#\", end=\"\")</code>. After the inner loop, <code>print()</code> starts a new line."}, {"id": "spam", "title": "Phishing filter \ud83c\udfa3", "goal": "For each email: if it contains <code>FREE</code>, print <code>SPAM: </code> and the email, else print <code>OK: </code> and the email.", "start": "emails = [\"Win a FREE phone\", \"Homework due Friday\", \"FREE coins here\", \"Lunch at 12\"]\nfor e in emails:\n    print(\"OK:\", e)", "want": ["SPAM: Win a FREE phone", "OK: Homework due Friday", "SPAM: FREE coins here", "OK: Lunch at 12"], "hint": "Inside the loop: <code>if \"FREE\" in e:</code> \u2192 print SPAM, <code>else:</code> \u2192 print OK. Both prints are indented two levels."}],DASH=[{"ctx": ["for i in range(3):", "    if i == 1:", "\u25a2"], "line": "print(\"one!\")", "job": "Print only when i is 1", "a": 2}, {"ctx": ["for i in range(3):", "    print(i)", "\u25a2"], "line": "print(\"Done\")", "job": "Print once, after the loop", "a": 0}, {"ctx": ["for i in range(3):", "\u25a2"], "line": "print(i)", "job": "Print every time round the loop", "a": 1}, {"ctx": ["if score > 5:", "\u25a2"], "line": "print(\"Well done\")", "job": "Only when score is over 5", "a": 1}, {"ctx": ["while lives > 0:", "    door = input()", "    if door == \"right\":", "\u25a2"], "line": "lives = lives - 1", "job": "Lose a life only when the door is right", "a": 2}, {"ctx": ["for e in emails:", "    if \"FREE\" in e:", "\u25a2"], "line": "print(\"SPAM\")", "job": "Flag each FREE email", "a": 2}, {"ctx": ["for e in emails:", "    if \"FREE\" in e:", "        print(\"SPAM\")", "\u25a2"], "line": "print(\"All checked\")", "job": "Once, after every email is checked", "a": 0}, {"ctx": ["for row in range(3):", "    for col in range(4):", "\u25a2"], "line": "print(\"#\", end=\"\")", "job": "A # for every column", "a": 2}, {"ctx": ["for row in range(3):", "    for col in range(4):", "        print(\"#\", end=\"\")", "\u25a2"], "line": "print()", "job": "A new line after each row", "a": 1}, {"ctx": ["for q in questions:", "    if answer == \"yes\":", "\u25a2"], "line": "score = score + 1", "job": "Add a point for each right answer", "a": 2}, {"ctx": ["\u25a2", "for q in questions:", "    ..."], "line": "score = 0", "job": "Set up once, before the loop", "a": 0}, {"ctx": ["if age > 12:", "    print(\"Adult ticket\")", "else:", "\u25a2"], "line": "print(\"Child ticket\")", "job": "Only when age is 12 or less", "a": 1}],QQ=[{"q": "In nesting, what tells Python that a line is <b>inside</b> a loop or an if?", "o": ["The indentation (spaces)", "A comma", "Capital letters", "The line number"], "a": 0, "why": "Indented lines belong to the line above that ends with a colon."}, {"q": "An <code>if</code> inside a <code>for</code> loop runs\u2026", "o": ["once every time the loop goes round", "only once", "never", "before the loop starts"], "a": 0, "why": "Everything inside the loop repeats, including the if."}];
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwUrLnXjM_bDseaTCzHlZ_U-plyEvTrtwLpZF8KSN8JcE7ukzz4FXTJPXxul6LUSNOdzQ/exec",PYODIDE_URL="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js",PT="https://pythontutor.com/iframe-embed.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false",REEBORG="https://reeborg.ca/reeborg.html?lang=en&mode=python";
+const CH=[{"id": "quiz", "proj": "Revision quiz", "title": "Mark the quiz", "goal": "For each guess, print <code>Correct!</code> or <code>Wrong!</code>, then the score. You need an <b>if inside a loop</b>.", "start": "answers = [\"vientiane\", \"30\", \"cold\"]\nguesses = [\"vientiane\", \"31\", \"cold\"]\nscore = 0\nfor i in range(3):\n    print(guesses[i])\nprint(\"Score:\", score)", "want": ["Correct!", "Wrong!", "Correct!", "Score: 2"], "hint": "Replace <code>print(guesses[i])</code> with <code>if guesses[i] == answers[i]:</code> and indent two lines under it: print Correct! and add 1 to score. Then <code>else:</code> with print Wrong!"}, {"id": "conv", "proj": "Unit converter", "title": "Run the menu", "goal": "For each menu choice: <code>1</code> converts 10 km to miles, <code>2</code> converts 10 \u00b0C to \u00b0F, anything else prints <code>Goodbye</code>. Selection <b>inside a loop</b>.", "start": "choices = [\"1\", \"2\", \"3\"]\nvalue = 10\nfor choice in choices:\n    print(\"You chose\", choice)", "want": ["10 km = 6.21 miles", "10 C = 50.0 F", "Goodbye"], "hint": "Inside the loop: <code>if choice == \"1\":</code> print <code>value, \"km =\", round(value * 0.621, 2), \"miles\"</code>. <code>elif choice == \"2\":</code> print <code>value, \"C =\", value * 9 / 5 + 32, \"F\"</code>. <code>else:</code> print Goodbye."}, {"id": "game", "proj": "Text game", "title": "Dragon doors", "goal": "Right door: lose a life and print <code>Dragon! Lives:</code> and the lives left. If lives reach 0, print <code>Game over</code>. Left door: print <code>Safe</code>. That's an <b>if inside an if inside a loop</b>.", "start": "doors = [\"left\", \"right\", \"right\"]\nlives = 2\nfor door in doors:\n    print(door)", "want": ["Safe", "Dragon! Lives: 1", "Dragon! Lives: 0", "Game over"], "hint": "<code>if door == \"right\":</code> then (indented) <code>lives = lives - 1</code>, print Dragon!, and a second <code>if lives == 0:</code> with print Game over indented one more level. <code>else:</code> print Safe."}],DASH=[{"ctx": ["for i in range(3):", "    if i == 1:", "\u25a2"], "line": "print(\"one!\")", "job": "Print only when i is 1", "a": 2}, {"ctx": ["for i in range(3):", "    print(i)", "\u25a2"], "line": "print(\"Done\")", "job": "Print once, after the loop", "a": 0}, {"ctx": ["for i in range(3):", "\u25a2"], "line": "print(i)", "job": "Print every time round the loop", "a": 1}, {"ctx": ["if score > 5:", "\u25a2"], "line": "print(\"Well done\")", "job": "Only when the score is over 5", "a": 1}, {"ctx": ["while lives > 0:", "    door = input()", "    if door == \"right\":", "\u25a2"], "line": "lives = lives - 1", "job": "Lose a life only on the right door", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "\u25a2"], "line": "score = score + 1", "job": "Add a point for each right guess", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "        score = score + 1", "\u25a2"], "line": "print(\"Score:\", score)", "job": "Show the score once, at the end", "a": 0}, {"ctx": ["for row in range(3):", "    for col in range(4):", "\u25a2"], "line": "print(\"#\", end=\"\")", "job": "A # for every column", "a": 2}, {"ctx": ["for row in range(3):", "    for col in range(4):", "        print(\"#\", end=\"\")", "\u25a2"], "line": "print()", "job": "A new line after each row", "a": 1}, {"ctx": ["\u25a2", "for q in questions:", "    ..."], "line": "score = 0", "job": "Set up once, before the loop", "a": 0}, {"ctx": ["if age > 12:", "    print(\"Adult ticket\")", "else:", "\u25a2"], "line": "print(\"Child ticket\")", "job": "Only when age is 12 or less", "a": 1}, {"ctx": ["while choice != \"3\":", "    choice = input()", "    if choice == \"1\":", "\u25a2"], "line": "print(km * 0.621)", "job": "Convert only when the choice is 1", "a": 2}],PS=["score \u2190 0", "FOR each question", "    INPUT guess", "    IF guess = answer THEN", "        score \u2190 score + 1", "    ELSE", "        OUTPUT \"Wrong\"", "    END IF", "END FOR", "OUTPUT score"],PY=["score = 0", "for q in questions:", "    guess = input(q)", "    if guess == answer:", "        score = score + 1", "    else:", "        print(\"Wrong\")", "print(score)"],STEPS=[{"t": "Set up", "n": "The score starts at 0. This runs once, before the loop.", "ps": [0], "py": [0], "fc": "init"}, {"t": "The loop asks: another question?", "n": "This is the loop. If yes, we go inside it.", "ps": [1], "py": [1], "fc": "loopq"}, {"t": "Inside the loop: get a guess", "n": "Indented once: it runs every time round.", "ps": [2], "py": [2], "fc": "inp"}, {"t": "Nested decision: is it right?", "n": "An IF inside the loop. This is the nesting!", "ps": [3], "py": [3], "fc": "dec"}, {"t": "Yes path", "n": "Indented twice: only when the guess is right.", "ps": [4], "py": [4], "fc": "yes"}, {"t": "No path", "n": "ELSE: only when the guess is wrong.", "ps": [5, 6], "py": [5, 6], "fc": "no"}, {"t": "Back to the top", "n": "The arrow goes back up. The loop asks again.", "ps": [7, 8], "py": [1], "fc": "loopq"}, {"t": "Loop finished: show the score", "n": "No more questions, so we leave the loop. Runs once.", "ps": [9], "py": [7], "fc": "out"}],QQ=[{"q": "What tells Python that a line is <b>inside</b> a loop or an if?", "o": ["The indentation (spaces at the start)", "A comma at the end", "Capital letters", "The line number"], "a": 0, "why": "Indented lines belong to the line above that ends with a colon."}, {"q": "An <code>if</code> inside a <code>for</code> loop is checked\u2026", "o": ["every time the loop goes round", "only once", "never", "before the loop starts"], "a": 0, "why": "Everything inside the loop repeats, including the if."}],WQ=[{"q": "In the video, how many times does the inner loop run in total for 3 rows of 4?", "o": ["12", "7", "4", "3"], "a": 0, "why": "4 each time \u00d7 3 rows = 12."}, {"q": "Where does <code>print()</code> go to start a new row?", "o": ["Inside the outer loop, after the inner loop", "Inside the inner loop", "Before both loops", "It isn't needed"], "a": 0, "why": "Once per row, so outer loop level."}],TQ=[{"q": "How many times does the <code>if</code> line run?", "o": ["4 times, once per guess", "Once", "3 times", "Never"], "a": 0, "why": "It is inside the loop, so it runs for every guess."}, {"q": "How many times does <code>print(\"Wrong!\")</code> run?", "o": ["1 time", "4 times", "3 times", "0 times"], "a": 0, "why": "Only the \"no\" guess goes down the else path."}];
 (function(){
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const store={get(k,d){try{const v=localStorage.getItem('y8lab_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y8lab_'+k,JSON.stringify(v))}catch(e){}}};
+const store={get(k,d){try{const v=localStorage.getItem('y8lab2_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y8lab2_'+k,JSON.stringify(v))}catch(e){}}};
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-/* ---------- XP + badges ---------- */
-const S=store.get('s',{xp:{},done:{},dashBest:0,maze:0});
-const RANKS=[[0,'Rookie 🐣'],[100,'Explorer 🧭'],[250,'Coder 💻'],[400,'Nesting Ninja 🥷'],[500,'Nesting Master 👑']];
-const BADGES=[["watch","🎬","Watcher","Load the video and answer both questions"],["maze","🧩","Maze Runner","Finish Maze level 6 or higher"],["trace","🔍","Tracer","Solve both trace challenges"],
- ["code1","💻","First Run","Pass one coding challenge"],["code3","🏆","Code Champion","Pass all three coding challenges"],["dash","⚡","Indent Dasher","Score 80+ in Indent Dash"]];
+/* code with coloured indent guides */
+function codeHTML(lines){return lines.map((l,i)=>{const m=l.match(/^( *)(.*)$/);const n=Math.floor(m[1].length/4);let g='';for(let k=1;k<=n;k++)g+=`<span class="ind i${k}"></span>`;return `<span class="l" data-i="${i}">${g}${esc(m[2])}</span>`}).join('')}
+/* XP */
+const S=store.get('s',{xp:{},done:{},dash:0});
+const ZONES=[["start","What is nesting?",20],["three","Same idea, three ways",40],["watch","Watch: loops in loops",50],["trace","Trace it: Python Tutor",60],["code","Code: your project",150],["robot","Play: Reeborg's robot",100],["dash","Game: Indent Dash",150],["badges","Badges",0]];
+const MAX=ZONES.reduce((a,z)=>a+z[2],0);
+const RANKS=[[0,"Rookie"],[120,"Explorer"],[260,"Coder"],[400,"Nesting Ninja"],[520,"Nesting Master"]];
+const BADGES=[["three","🧭","Three Ways","Step through all 8 steps"],["watch","🎬","Watcher","Play the video and answer both"],["trace","🔍","Tracer","Answer both trace questions"],
+ ["code1","💻","First Pass","Pass one coding challenge"],["code3","🏆","Project Ready","Pass all three challenges"],["robot","🤖","Robot Pilot","Finish Hurdle 3"],["dash","⚡","Indent Dasher","Score 80 or more in Indent Dash"]];
+const zxp=z=>Object.entries(S.xp).filter(([k])=>k.split(':')[0]===z).reduce((a,[,v])=>a+v,0);
 const total=()=>Object.values(S.xp).reduce((a,b)=>a+b,0);
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1800)}
-function addXP(key,n,msg){if((S.xp[key]||0)>=n)return;const gain=n-(S.xp[key]||0);S.xp[key]=n;store.set('s',S);hud();toast(`+${gain} XP ${msg||''}`)}
-function badgeOn(id){return {watch:S.done.yt&&S.done.wq0&&S.done.wq1,maze:S.maze>=6,trace:S.done.pt0&&S.done.pt1,code1:CH.some(c=>S.done['ch_'+c.id]),code3:CH.every(c=>S.done['ch_'+c.id]),dash:S.dashBest>=80}[id]}
-let lastB=null;
+function addXP(key,n,msg){const cur=S.xp[key]||0;if(cur>=n)return;S.xp[key]=n;store.set('s',S);hud();toast(`+${n-cur} XP${msg?' · '+msg:''}`)}
+const has=id=>({three:S.done.three,watch:S.done['watch:0']&&S.done['watch:1']&&S.done.yt,trace:S.done['trace:0']&&S.done['trace:1'],code1:CH.some(c=>S.done['code:'+c.id]),code3:CH.every(c=>S.done['code:'+c.id]),robot:S.done.rb1,dash:S.dash>=80})[id];
+let prevB=null;
 function hud(){const x=total();let r=RANKS[0],nx=null;RANKS.forEach((k,i)=>{if(x>=k[0]){r=k;nx=RANKS[i+1]||null}});
-  $('#xnum').textContent=x+' XP';$('#rank').textContent=r[1];$('#xbar').style.width=(nx?Math.min(100,(x-r[0])/(nx[0]-r[0])*100):100)+'%';
-  const on=BADGES.filter(b=>badgeOn(b[0])).map(b=>b[0]);$('#badges').innerHTML=BADGES.map(b=>`<span class="${on.includes(b[0])?'on':''}" title="${b[2]}">${b[1]}</span>`).join('');
+  $('#xpn').textContent=x+' XP';$('#rank').textContent=r[1];$('#mbar').style.width=(nx?(x-r[0])/(nx[0]-r[0])*100:100)+'%';
+  const on=BADGES.filter(b=>has(b[0])).map(b=>b[0]);
+  $('#bdg').innerHTML=BADGES.map(b=>`<span class="${on.includes(b[0])?'on':''}" title="${b[2]}">${b[1]}</span>`).join('');
   $('#blist').innerHTML=BADGES.map(b=>`<div class="${on.includes(b[0])?'on':''}"><b>${b[1]} ${b[2]}</b><span>${b[3]}</span></div>`).join('');
-  if(lastB&&on.length>lastB.length){const nb=BADGES.find(b=>on.includes(b[0])&&!lastB.includes(b[0]));if(nb)setTimeout(()=>toast(`🏅 New badge: ${nb[2]}!`),1900)}lastB=on;
-  $$('#nav button').forEach(b=>{const z=b.dataset.z;const ok={watch:badgeOn('watch'),maze:badgeOn('maze'),trace:badgeOn('trace'),code:badgeOn('code3'),dash:badgeOn('dash')}[z];b.querySelector('.ck').textContent=ok?' ✓':''})}
-/* ---------- navigation ---------- */
-const zones=$$('.zone');
-$('#nav').innerHTML=zones.map(z=>`<button data-z="${z.dataset.z}">${z.dataset.n}<span class="ck"></span></button>`).join('');
-function go(z){zones.forEach(s=>s.classList.toggle('on',s.dataset.z===z));$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.z===z));store.set('zone',z);window.scrollTo({top:0})}
-$$('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.z));
-const ZI={watch:["🎬","Watch","A short clip and two questions"],maze:["🧩","Play","Blockly Maze: ifs inside repeats"],trace:["🔍","See it","Watch nested code run in Python Tutor"],code:["💻","Code","3 challenges in real Python"],dash:["⚡","Indent Dash","A 45-second indent game"],badges:["🏅","Badges","Collect them all"]};
-$('#zoneCards').innerHTML=Object.entries(ZI).map(([z,[i,t,d]])=>`<button data-z="${z}"><i>${i}</i><b>${t}</b><span>${d}</span></button>`).join('');
-$$('#zoneCards button').forEach(b=>b.onclick=()=>go(b.dataset.z));
-const KW=[["loop","repeats steps (iteration)"],["selection","chooses a path: if / else"],["condition","a True or False question"],["nested","one structure inside another"],["indentation","spaces that show what is inside what"],["trace","follow the code one line at a time"]];
+  if(prevB&&on.length>prevB.length){const nb=BADGES.find(b=>on.includes(b[0])&&!prevB.includes(b[0]));setTimeout(()=>toast('New badge: '+nb[2]),1900)}prevB=on;
+  $$('#rail button').forEach(b=>{const z=b.dataset.z,zz=ZONES.find(q=>q[0]===z);const got=zxp(z);b.classList.toggle('done',zz[2]>0&&got>=zz[2]);b.querySelector('.x').textContent=zz[2]?`${got}/${zz[2]}`:''})}
+/* nav */
+$('#rail').innerHTML=ZONES.map((z,i)=>`<button data-z="${z[0]}"><span class="k">${i+1}</span><span class="lbl">${z[1]}<span class="x"></span></span></button>`).join('');
+function go(z){$$('.zone').forEach(s=>s.classList.toggle('on',s.dataset.z===z));$$('#rail button').forEach(b=>b.classList.toggle('on',b.dataset.z===z));store.set('zone',z);window.scrollTo({top:0})}
+$$('#rail button').forEach(b=>b.onclick=()=>go(b.dataset.z));
+/* key words */
+const KW=[["loop","repeats the steps inside it"],["selection","chooses a path: if / elif / else"],["condition","a question that is True or False"],["nested","one structure inside another"],["indentation","spaces that show what is inside what"],["trace","follow code one line at a time"]];
 $('#kw').innerHTML=KW.map(([w,m])=>`<div><b>${w}</b><span>${m}</span></div>`).join('');
-/* ---------- questions (retry allowed) ---------- */
-function qs(host,list,keyp,xp){host.innerHTML=list.map((q,i)=>`<div class="q" data-i="${i}"><p>${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="fbq"></div></div>`).join('');
-  host.querySelectorAll('.q').forEach(d=>{const i=+d.dataset.i,q=list[i];if(S.done[keyp+i])d.querySelectorAll('button').forEach(x=>{if(+x.dataset.j===q.a)x.classList.add('right')});
+/* questions: retry allowed */
+function qset(host,list,zone,xp){host.innerHTML='<div class="stack">'+list.map((q,i)=>`<div class="q" data-i="${i}"><p class="qq">${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="fbq"></div></div>`).join('')+'</div>';
+  host.querySelectorAll('.q').forEach(d=>{const i=+d.dataset.i,q=list[i],key=zone+':'+i;if(S.done[key])d.querySelector(`button[data-j="${q.a}"]`).classList.add('right');
     d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const ok=+b.dataset.j===q.a;
-      if(ok){d.querySelectorAll('button').forEach(x=>x.classList.remove('wrong'));b.classList.add('right');S.done[keyp+i]=1;addXP(keyp+i,xp,'Nice!')}else b.classList.add('wrong');
-      d.querySelector('.fbq').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✅ '+q.why:'Not quite. Try another!'}</div>`})})}
-qs($('#watchQ'),QQ,'wq',20);
-qs($('#mzQin'),[{q:"🤔 Think: in level 6+, what did you put <b>inside</b> the repeat block?",o:["an if block (path ahead?)","only move forward","nothing"],a:0,why:"An if inside a repeat: the person checks the path every step. That's nesting!"}],'mq',20);
-qs($('#ptQ'),[{q:"How many times does the <code>if</code> line run?",o:["4 times, once per answer","Once","2 times","Never"],a:0,why:"The if is inside the loop, so it runs every time round."},
-  {q:"How many times does <code>score = score + 1</code> run?",o:["3 times","4 times","1 time","0 times"],a:0,why:"It is inside the if, so only for the 3 \"yes\" answers."}],'pt',30);
-/* ---------- embeds ---------- */
-function embed(frameId,src,h){const f=$(frameId);f.innerHTML=`<iframe src="${src}" style="height:${h}px" loading="lazy" allow="fullscreen" title="Embedded activity"></iframe>`}
-$('#ytLoad').onclick=()=>{$('#ytFrame').innerHTML='<div style="position:relative;aspect-ratio:16/9"><iframe src="https://www.youtube-nocookie.com/embed/APWy6Pc83gE?rel=0&autoplay=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Nested loops video"></iframe></div>';S.done.yt=1;addXP('yt',10,'for watching')};
-$('#mzLoad').onclick=()=>embed('#mzFrame','https://blockly.games/maze?lang=en&level=6',560);
-$('#ptLoad').onclick=()=>embed('#ptFrame',PT,520);
-$('#mzLevel').value=S.maze;const mzo=()=>{$('#mzOut').textContent='Level '+S.maze+(S.maze>=6?' 🧩 nesting levels!':'')};mzo();
-$('#mzLevel').oninput=e=>{S.maze=+e.target.value;store.set('s',S);mzo();addXP('maze',S.maze*10,'Maze progress')};
-/* ---------- Python ---------- */
+      if(ok){d.querySelectorAll('button').forEach(x=>x.classList.remove('wrong'));b.classList.add('right');S.done[key]=1;addXP(key,xp,'correct')}else b.classList.add('wrong');
+      d.querySelector('.fbq').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?q.why:'Not quite. Try another answer.'}</div>`})})}
+qset($('#q-start'),QQ,'start',10);qset($('#q-watch'),WQ,'watch',20);qset($('#q-trace'),TQ,'trace',30);
+/* three ways stepper */
+$('#psCode').innerHTML=codeHTML(PS);$('#pyCode').innerHTML=codeHTML(PY);let st=0;
+function step(){const s=STEPS[st];$('#sT').textContent=`Step ${st+1}: ${s.t}`+(/[?.]$/.test(s.t)?"":".");$('#sN').textContent=s.n;$('#sNum').textContent=`${st+1} / ${STEPS.length}`;
+  $$('#psCode .l').forEach(l=>l.classList.toggle('hl',s.ps.includes(+l.dataset.i)));$$('#pyCode .l').forEach(l=>l.classList.toggle('hl',s.py.includes(+l.dataset.i)));
+  $$('svg.fc .n').forEach(n=>n.classList.toggle('hl',n.id==='fc-'+s.fc));$('#sPrev').disabled=st===0;$('#sNext').textContent=st===STEPS.length-1?'Start again':'Next step →';
+  if(st===STEPS.length-1&&!S.done.three){S.done.three=1;addXP('three:all',40,'all steps')}}
+$('#sNext').onclick=()=>{st=st===STEPS.length-1?0:st+1;step()};$('#sPrev').onclick=()=>{if(st>0){st--;step()}};step();
+/* embeds */
+const frame=(id,src,h,title)=>{$(id).innerHTML=`<iframe src="${src}" style="height:${h}px" loading="lazy" allow="fullscreen" title="${title}"></iframe>`};
+$('#ytLoad').onclick=()=>{$('#ytFrame').innerHTML='<div style="position:relative;aspect-ratio:16/9;max-width:100%"><iframe src="https://www.youtube-nocookie.com/embed/APWy6Pc83gE?rel=0&autoplay=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Nested loops video"></iframe></div>';S.done.yt=1;addXP('watch:yt',10,'video')};
+$('#ptLoad').onclick=()=>frame('#ptFrame',PT,520,'Python Tutor');
+$('#rbLoad').onclick=()=>frame('#rbFrame',REEBORG,620,"Reeborg's World");
+/* Reeborg missions */
+$('#rb1').innerHTML=codeHTML(["def turn_right():","    turn_left()","    turn_left()","    turn_left()","","def jump():","    turn_left()","    move()","    turn_right()","    move()","    turn_right()","    move()","    turn_left()","","while not at_goal():","    if wall_in_front():","        jump()","    else:","        move()"]);
+$('#rb2').innerHTML=codeHTML(["def jump():","    turn_left()","    while wall_on_right():","        move()","    turn_right()","    move()","    turn_right()","    while front_is_clear():","        move()","    turn_left()"]);
+$('#rbHint').onclick=()=>{$('#rb2').hidden=!$('#rb2').hidden;$('#rbHint').textContent=$('#rb2').hidden?'Show the boss hint':'Hide the boss hint'};
+$('#rbDone').innerHTML=[["rb1","Hurdle 3 done",50],["rb2","Hurdle 4 done",50]].map(([k,t,x])=>`<button class="btn ghost sm" data-k="${k}" data-x="${x}">${t}</button>`).join('');
+const rbSync=()=>$$('#rbDone button').forEach(b=>{if(S.done[b.dataset.k]){b.textContent='✓ '+b.textContent.replace('✓ ','');b.disabled=true}});rbSync();
+$$('#rbDone button').forEach(b=>b.onclick=()=>{S.done[b.dataset.k]=1;addXP('robot:'+b.dataset.k,+b.dataset.x,'mission');rbSync()});
+/* Python */
 let pyP=null;
-function py(){if(!pyP)pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PYODIDE_URL;s.onload=async()=>{try{const p=await loadPyodide();p.runPython(document.getElementById('harness').textContent);res(p)}catch(e){rej(e)}};s.onerror=()=>{pyP=null;rej(new Error('Python could not load. Check the internet and try again.'))};document.head.appendChild(s)});return pyP}
+function py(){if(!pyP)pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PYODIDE_URL;s.onload=async()=>{try{const p=await loadPyodide();p.runPython(document.getElementById('harness').textContent);res(p)}catch(e){pyP=null;rej(e)}};s.onerror=()=>{pyP=null;rej(new Error('Python could not load. Check the internet, then press Run again.'))};document.head.appendChild(s)});return pyP}
 async function runPy(src){const p=await py();const f=p.globals.get('run_code');const r=f(src,p.toPy([]),true);const [o,e]=r.toJs();r.destroy();f.destroy();return {out:o,err:e}}
 let cur=0;const ed=$('#ed'),gut=$('#gut');
-const codeOf=i=>store.get('code_'+CH[i].id,CH[i].start);
-function fit(){const n=ed.value.split('\n').length;gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');ed.rows=Math.max(6,n+1);store.set('code_'+CH[cur].id,ed.value)}
-ed.addEventListener('input',fit);ed.addEventListener('keydown',e=>{const s=ed.selectionStart,v=ed.value;
-  if(e.key==='Tab'){e.preventDefault();ed.setRangeText('    ',s,ed.selectionEnd,'end');fit()}
+function fit(){const n=ed.value.split('\n').length;gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');ed.rows=Math.max(7,n+1);store.set('code_'+CH[cur].id,ed.value)}
+ed.addEventListener('input',fit);
+ed.addEventListener('keydown',e=>{const s=ed.selectionStart,v=ed.value;if(e.key==='Tab'){e.preventDefault();ed.setRangeText('    ',s,ed.selectionEnd,'end');fit()}
   else if(e.key==='Enter'){const ls=v.lastIndexOf('\n',s-1)+1,line=v.slice(ls,s);let ind=(line.match(/^ */)||[''])[0];if(/:\s*$/.test(line))ind+='    ';e.preventDefault();ed.setRangeText('\n'+ind,s,ed.selectionEnd,'end');fit()}});
-function drawCh(){$('#chs').innerHTML=CH.map((c,i)=>`<button data-i="${i}" class="${i===cur?'on':''} ${S.done['ch_'+c.id]?'done':''}">${S.done['ch_'+c.id]?'✅ ':''}${i+1}. ${c.title}</button>`).join('');
-  $$('#chs button').forEach(b=>b.onclick=()=>{cur=+b.dataset.i;loadCh()})}
-function loadCh(){const c=CH[cur];$('#chT').innerHTML=c.title;$('#chG').innerHTML=c.goal;$('#chH').innerHTML=c.hint;$('#chH').style.display='none';$('#chW').textContent=c.want.join('\n');ed.value=codeOf(cur);fit();$('#out').textContent='Output appears here.';drawCh()}
-$('#chHint').onclick=()=>{const h=$('#chH');h.style.display=h.style.display==='none'?'block':'none'};
-$('#reset').onclick=()=>{if(confirm('Go back to the starting code?')){ed.value=CH[cur].start;fit()}};
+function tabs(){$('#chTabs').innerHTML=CH.map((c,i)=>`<button data-i="${i}" class="${i===cur?'on':''} ${S.done['code:'+c.id]?'done':''}"><small>${c.proj}</small>${S.done['code:'+c.id]?'✓ ':''}${c.title}</button>`).join('');$$('#chTabs button').forEach(b=>b.onclick=()=>{cur=+b.dataset.i;load()})}
+function load(){const c=CH[cur];$('#chT').textContent=c.title;$('#chG').innerHTML=c.goal;$('#chH').innerHTML=c.hint;$('#chH').hidden=true;$('#chHint').textContent='Show a hint';$('#chW').textContent=c.want.join('\n');ed.value=store.get('code_'+c.id,c.start);fit();$('#out').textContent='Output appears here.';$('#resetAsk').hidden=true;tabs()}
+$('#chHint').onclick=()=>{$('#chH').hidden=!$('#chH').hidden;$('#chHint').textContent=$('#chH').hidden?'Show a hint':'Hide the hint'};
+$('#reset').onclick=()=>{$('#resetAsk').hidden=false};$('#resetYes').onclick=()=>{ed.value=CH[cur].start;fit();$('#resetAsk').hidden=true};
 $('#run').onclick=async()=>{const o=$('#out');o.textContent='Running…';try{const r=await runPy(ed.value);
-    o.innerHTML=esc(r.out)+(r.err?`<span class="e">${r.out&&!r.out.endsWith('\n')?'\n':''}❌ ${esc(r.err)}</span>`:'');
-    const lines=r.out.replace(/\s+$/,'').split('\n').map(l=>l.replace(/\s+$/,''));const c=CH[cur];
-    if(!r.err&&lines.length===c.want.length&&lines.every((l,i)=>l===c.want[i])){if(!S.done['ch_'+c.id]){S.done['ch_'+c.id]=1;store.set('s',S)}o.innerHTML+=`\n<span style="color:var(--gold)">🎉 Challenge passed!</span>`;addXP('ch_'+c.id,50,'Challenge passed!');drawCh()}
-    else if(!r.err)o.innerHTML+=`\n<span style="color:var(--muted)">Not the expected output yet. Compare with the box on the left.</span>`}
-  catch(e){o.innerHTML=`<span class="e">${esc(e.message)}</span>`}};
-loadCh();
-/* ---------- Indent Dash ---------- */
-let dq=[],dk=0,ds=0,dt=45,dtim=null,combo=0,lock=false;
-const IND=["","    ","        "];
-function dShow(){const it=dq[dk%dq.length];$('#dJob').textContent='🎯 '+it.job;$('#dCode').innerHTML=it.ctx.map(l=>l==='▢'?`<span class="slot">▢ ${esc(it.line)}</span>`:esc(l)).join('\n');$('#dCard').className='dcard';$('#dLine').textContent=''}
-function dPick(i){if(!dtim||lock)return;const it=dq[dk%dq.length];const ok=i===it.a;
-  if(ok){combo++;const m=combo>=3?2:1;ds+=10*m}else combo=0;$('#dS').textContent=ds;$('#dC').textContent='combo ×'+(combo>=3?2:1)+(combo>=3?' 🔥':'');
-  $('#dCard').className='dcard '+(ok?'ok':'no');$('#dCode').innerHTML=it.ctx.map(l=>l==='▢'?`<span style="color:${ok?'var(--neon)':'var(--bad)'}">${esc(IND[it.a]+it.line)}</span>`:esc(l)).join('\n');
-  $('#dLine').textContent=ok?'✅ Correct!':`❌ It needs ${['no indent','1 level','2 levels'][it.a]}.`;lock=true;
-  setTimeout(()=>{lock=false;dk++;if(dk%dq.length===0)dq=shuffle(DASH);if(dtim)dShow()},ok?450:1100)}
-function dEnd(){clearInterval(dtim);dtim=null;$$('.dbtns button').forEach(b=>b.disabled=true);$('#dGo').disabled=false;$('#dGo').textContent='▶ Play again';
-  S.dashBest=Math.max(S.dashBest||0,ds);store.set('s',S);$('#dJob').textContent=`⏰ Time! You scored ${ds}.`;$('#dBest').textContent='Best: '+S.dashBest;addXP('dash',Math.min(150,S.dashBest),'Indent Dash')}
-$('#dGo').onclick=()=>{dq=shuffle(DASH);dk=0;ds=0;dt=45;combo=0;$('#dS').textContent=0;$('#dT').textContent=45;$('#dC').textContent='combo ×1';$$('.dbtns button').forEach(b=>b.disabled=false);$('#dGo').disabled=true;dShow();
-  dtim=setInterval(()=>{dt--;$('#dT').textContent=dt;if(dt<=0)dEnd()},1000)};
-$$('.dbtns button').forEach(b=>b.onclick=()=>dPick(+b.dataset.i));
-document.addEventListener('keydown',e=>{if(!dtim)return;if(['0','1','2'].includes(e.key))dPick(+e.key)});
-$('#dBest').textContent=S.dashBest?'Best: '+S.dashBest:'';
-/* ---------- share ---------- */
+  o.innerHTML=esc(r.out)+(r.err?`<span class="e">${r.out&&!r.out.endsWith('\n')?'\n':''}Error: ${esc(r.err)}</span>`:'');
+  const lines=r.out.replace(/\s+$/,'').split('\n').map(l=>l.replace(/\s+$/,''));const c=CH[cur];
+  if(!r.err&&lines.length===c.want.length&&lines.every((l,i)=>l===c.want[i])){S.done['code:'+c.id]=1;store.set('s',S);o.innerHTML+='\n<span class="ok">Challenge passed!</span>';addXP('code:'+c.id,50,'challenge passed');tabs()}
+  else if(!r.err)o.innerHTML+='\n<span class="e">Not the expected output yet. Compare it line by line.</span>'}catch(e){o.innerHTML=`<span class="e">${esc(e.message)}</span>`}};
+load();
+/* Indent Dash */
+let dq=[],dk=0,ds=0,dt=45,tim=null,combo=0,lock=false;const IND=["","    ","        "];
+function dShow(){const it=dq[dk%dq.length];$('#dJob').textContent=it.job;$('#dCode').innerHTML=it.ctx.map(l=>l==='▢'?`<span class="l"><span class="slot">${esc(it.line)}</span></span>`:codeHTML([l])).join('');$('#dCard').className='dcard';$('#dRes').textContent=''}
+function pick(i){if(!tim||lock)return;const it=dq[dk%dq.length],ok=i===it.a;if(ok){combo++;ds+=10*(combo>=3?2:1)}else combo=0;
+  $('#dS').textContent=ds;$('#dC').textContent=combo>=3?'×2':'×1';$('#dCard').className='dcard '+(ok?'ok':'no');
+  $('#dCode').innerHTML=it.ctx.map(l=>codeHTML([l==='▢'?IND[it.a]+it.line:l])).join('');
+  $('#dRes').textContent=ok?'Correct':'It needs '+['no indent','1 level','2 levels'][it.a];lock=true;setTimeout(()=>{lock=false;dk++;if(dk%dq.length===0)dq=shuffle(DASH);if(tim)dShow()},ok?450:1100)}
+function dEnd(){clearInterval(tim);tim=null;$$('.dbtns button').forEach(b=>b.disabled=true);$('#dGo').disabled=false;$('#dGo').textContent='Play again';
+  S.dash=Math.max(S.dash||0,ds);store.set('s',S);$('#dJob').textContent=`Time's up. You scored ${ds}.`;$('#dBest').textContent='Best: '+S.dash;addXP('dash:best',Math.min(150,S.dash),'Indent Dash')}
+$('#dGo').onclick=()=>{dq=shuffle(DASH);dk=0;ds=0;dt=45;combo=0;$('#dS').textContent=0;$('#dT').textContent=45;$('#dC').textContent='×1';$$('.dbtns button').forEach(b=>b.disabled=false);$('#dGo').disabled=true;dShow();
+  tim=setInterval(()=>{dt--;$('#dT').textContent=dt;if(dt<=0)dEnd()},1000)};
+$$('.dbtns button').forEach(b=>b.onclick=()=>pick(+b.dataset.i));
+document.addEventListener('keydown',e=>{if(tim&&['0','1','2'].includes(e.key))pick(+e.key)});
+$('#dCode').innerHTML=codeHTML(["for i in range(3):"])+'<span class="l"><span class="slot">print(i)</span></span>';if(S.dash)$('#dBest').textContent='Best: '+S.dash;
+/* share */
 $('#nm').value=store.get('nm','');$('#cls').value=store.get('cls','');$('#nm').oninput=e=>store.set('nm',e.target.value.trim());$('#cls').oninput=e=>store.set('cls',e.target.value.trim());
-$('#send').onclick=async()=>{const m=$('#sendMsg');const nm=store.get('nm',''),cl=store.get('cls','');if(!nm||!cl){m.textContent='Type your name and class first.';return}
-  const on=BADGES.filter(b=>badgeOn(b[0])).map(b=>b[2]);
-  const data={"Year":"Year 8 (W11)","Name":nm,"Class":cl,"Total stars":total()+" / 530","XP":total(),"Rank":$('#rank').textContent,"Badges":on.join(', ')||'none',
-    "Maze level":S.maze,"Coding challenges passed":CH.filter(c=>S.done['ch_'+c.id]).map(c=>c.title).join(', ')||'none',"Indent Dash best":S.dashBest||0,"Sent from":location.href.split('?')[0]};
-  $('#send').disabled=true;m.textContent='Sending…';try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});m.textContent='✅ Sent. Keep exploring!'}
-  catch(e){m.textContent='Could not send. Check the internet.'}finally{$('#send').disabled=false}};
-hud();go(store.get('zone','home'));
+$('#send').onclick=async()=>{const m=$('#sendMsg'),nm=store.get('nm',''),cl=store.get('cls','');if(!nm||!cl){m.textContent='Type your name and class first.';return}
+  const data={"Year":"Year 8 (W11)","Name":nm,"Class":cl,"Total stars":total()+" / "+MAX,"XP":total(),"Rank":$('#rank').textContent,"Badges":BADGES.filter(b=>has(b[0])).map(b=>b[2]).join(', ')||'none',
+    "Coding challenges passed":CH.filter(c=>S.done['code:'+c.id]).map(c=>c.title).join(', ')||'none',"Robot missions":["rb1","rb2"].filter(k=>S.done[k]).map(k=>k==='rb1'?'Hurdle 3':'Hurdle 4').join(', ')||'none',"Indent Dash best":S.dash||0,"Sent from":location.href.split('?')[0]};
+  $('#send').disabled=true;m.textContent='Sending…';try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});m.textContent='Sent. Keep exploring!'}catch(e){m.textContent='Could not send. Check the internet and try again.'}finally{$('#send').disabled=false}};
+hud();go(store.get('zone','start'));
 })();
 </script>
 </body>
