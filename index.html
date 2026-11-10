@@ -2,276 +2,345 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<title>Nesting Lab</title>
+<title>Y8 Design Project Homework</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d6e78">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: a "lab bench". Left rail = the learning path; right = one zone at a time. Nesting depth is colour-coded everywhere (loop blue, if pink, action amber). */
 :root{
-  --bg:#f3f6fa; --surface:#ffffff; --surface2:#e9eef5; --ink:#14213a; --muted:#56627a; --line:#d5dde8;
-  --accent:#0d6e78; --accent-ink:#ffffff; --xp:#b86e00;
+  --bg:#f3f6fa; --surface:#ffffff; --surface2:#e8edf4; --ink:#14213a; --muted:#56627a; --line:#d3dbe7;
+  --accent:#0d6e78; --accent-ink:#ffffff; --pts:#a35f00;
+  --p1:#0d6e78; --p2:#5b4bc4; --p3:#b0570b; --p1bg:#e2f2f3; --p2bg:#ecebfb; --p3bg:#fbeee2;
   --d1:#2f6fd6; --d2:#c2307a; --d3:#c27a00; --good:#1b7f4b; --bad:#c23a3a; --goodbg:#e4f4ea; --badbg:#fbe7e7;
   --code-bg:#0f1b2d; --code-ink:#e8eef8; --code-muted:#7c8aa5; --hlfill:#ffd98a;
   --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,"Courier New",monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d1420; --surface:#151f30; --surface2:#1d2a40; --ink:#e8eef8; --muted:#9fb0cc; --line:#2a3a55;
-  --accent:#4cc3cd; --accent-ink:#06222a; --xp:#ffbe5c; --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
+  --bg:#0d1420; --surface:#151f30; --surface2:#1e2b42; --ink:#e8eef8; --muted:#a2b2cd; --line:#2c3c58;
+  --accent:#4cc3cd; --accent-ink:#06222a; --pts:#ffbe5c;
+  --p1:#4cc3cd; --p2:#a99cff; --p3:#ffa45c; --p1bg:#12313a; --p2bg:#262650; --p3bg:#3a2614;
+  --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
   --code-bg:#09111d; --code-ink:#e8eef8; --code-muted:#6d7d99; --hlfill:#6b4d16; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0d1420; --surface:#151f30; --surface2:#1d2a40; --ink:#e8eef8; --muted:#9fb0cc; --line:#2a3a55;
-  --accent:#4cc3cd; --accent-ink:#06222a; --xp:#ffbe5c; --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
+  --bg:#0d1420; --surface:#151f30; --surface2:#1e2b42; --ink:#e8eef8; --muted:#a2b2cd; --line:#2c3c58;
+  --accent:#4cc3cd; --accent-ink:#06222a; --pts:#ffbe5c;
+  --p1:#4cc3cd; --p2:#a99cff; --p3:#ffa45c; --p1bg:#12313a; --p2bg:#262650; --p3bg:#3a2614;
+  --d1:#6fa3ff; --d2:#ff7ab3; --d3:#ffb84d; --good:#5fd394; --bad:#ff8a8a; --goodbg:#143326; --badbg:#3a1d22;
   --code-bg:#09111d; --code-ink:#e8eef8; --code-muted:#6d7d99; --hlfill:#6b4d16; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:19px;line-height:1.55}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
-button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-code,pre,textarea.ed,.mono{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
-code{background:var(--surface2);border-radius:6px;padding:.05em .4em;font-size:.88em}
+code,pre,textarea.code,.mono{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+code{background:var(--surface2);border-radius:6px;padding:.05em .35em;font-size:.86em}
 a{color:var(--accent);font-weight:700}
-h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
-h1{font-size:clamp(30px,4vw,44px);font-weight:800}h2{font-size:clamp(26px,3vw,34px);font-weight:800}h3{font-size:21px;font-weight:600}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.lead{font-size:20px;color:var(--muted);max-width:62ch;margin:8px 0 0}
-p{margin:0}.stack{display:flex;flex-direction:column;gap:14px}
-/* top bar */
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,7vw,42px);font-weight:800}h2{font-size:clamp(24px,5.5vw,30px);font-weight:800}h3{font-size:19px;font-weight:600}
+p{margin:0}
+.wrap{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.stack{display:flex;flex-direction:column;gap:14px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)}.note{font-size:16px;color:var(--muted)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* header */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
-.topin{max-width:1240px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.brand{font-family:var(--display);font-weight:800;font-size:22px;white-space:nowrap}.brand span{color:var(--accent)}
-.meter{flex:1;min-width:220px;display:flex;align-items:center;gap:10px}
-.mbar{flex:1;height:10px;background:var(--surface2);border-radius:6px;overflow:hidden}.mbar i{display:block;height:100%;width:0;background:var(--xp);transition:width .5s}
-.xpn{font-weight:700;color:var(--xp);font-variant-numeric:tabular-nums;white-space:nowrap}
-.rank{font-size:15px;font-weight:700;border:2px solid var(--line);border-radius:999px;padding:1px 10px;white-space:nowrap}
-.bdg{display:flex;gap:2px;font-size:20px}.bdg span{opacity:.2;filter:grayscale(1)}.bdg span.on{opacity:1;filter:none}
-/* shell */
-.shell{max-width:1240px;margin:0 auto;padding-block:24px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
-.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);display:flex;flex-direction:column;gap:4px}
-.rail button{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;text-align:left;background:none;border:0;border-radius:12px;padding:9px 10px;font-weight:700;color:var(--muted)}
-.rail button .k{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:2px solid var(--line);font-variant-numeric:tabular-nums}
-.rail button:hover{background:var(--surface2);color:var(--ink)}
-.rail button.on{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--accent)}
-.rail button.on .k{border-color:var(--accent);color:var(--accent)}
-.rail button.done .k{background:var(--good);border-color:var(--good);color:var(--surface)}
-.rail button .x{display:block;font-size:13px;color:var(--xp);font-variant-numeric:tabular-nums;font-weight:700}.rail .lbl{line-height:1.25}
-.zone{display:none}.zone.on{display:flex;flex-direction:column;gap:20px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-width:0}
-.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
-.wide{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
-.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;font-weight:700}
-.btn.ghost{background:none;color:var(--ink);border:2px solid var(--line)}.btn.sm{padding:6px 14px;font-size:17px}.btn:disabled{opacity:.45;cursor:default}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-/* nesting diagram */
-.nest{border:3px solid var(--d1);border-radius:14px;padding:26px 14px 14px;position:relative}
+.topin{display:flex;gap:10px;align-items:center;min-height:56px;padding-block:6px}
+.home{background:none;border:0;padding:6px 4px;font-family:var(--display);font-weight:800;font-size:19px;display:flex;gap:6px;align-items:center;min-width:0}
+.home .ar{display:none;font-size:22px}.inpart .home .ar{display:inline}
+.home span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.total{margin-left:auto;display:flex;align-items:baseline;gap:4px;font-weight:700;color:var(--pts);font-variant-numeric:tabular-nums;white-space:nowrap;border:2px solid var(--line);border-radius:999px;padding:3px 12px}
+.total small{font-size:14px;color:var(--muted)}
+/* home */
+.hero{padding-block:22px 6px}
+.hero .lead{font-size:19px;color:var(--muted);margin-top:8px;max-width:58ch}
+.parts{display:grid;gap:14px;margin-top:18px}
+.pc{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--pc);border-radius:16px;padding:16px}
+.pc .num{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:26px;background:var(--pcbg);color:var(--pc)}
+.pc h2{font-size:22px}.pc p{font-size:16px;color:var(--muted)}
+.pbar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden;margin-top:8px}.pbar i{display:block;height:100%;width:0;background:var(--pc);transition:width .4s}
+.pc .meta{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.pc .meta b{color:var(--pc)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;min-width:0}
+details.box summary{cursor:pointer;font-family:var(--display);font-weight:800;font-size:20px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
+details.box summary::-webkit-details-marker{display:none}details.box summary::after{content:"+";font-size:26px;color:var(--muted)}details.box[open] summary::after{content:"−"}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:12px}
+.vc{border-radius:10px;padding:8px 12px;background:var(--bg);border-left:4px solid var(--vc)}
+.vc b{display:block}.vc span{font-size:15px;color:var(--muted)}
+.vc.r{--vc:var(--p1)}.vc.n{--vc:var(--p2)}.vc.x{--vc:var(--p3)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:14px;font-weight:700;margin-top:10px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
+.how{display:grid;gap:8px;font-size:16px}.how div{display:flex;gap:10px}.how b{flex:none;color:var(--pts)}
+input.txt{width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px}
+.sendg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.scoretab{display:grid;gap:6px;font-variant-numeric:tabular-nums}.scoretab div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:4px}
+/* part view */
+.phead{padding-block:16px 4px;display:flex;flex-direction:column;gap:10px}
+.ptag{display:inline-flex;gap:8px;align-items:center;font-weight:700;font-size:15px;color:var(--pc);background:var(--pcbg);border-radius:999px;padding:3px 12px;align-self:flex-start}
+.dots{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin}
+.dots button{flex:none;min-width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-variant-numeric:tabular-nums}
+.dots button.on{border-color:var(--pc);color:var(--pc);box-shadow:0 0 0 2px var(--pc) inset}
+.dots button.done{background:var(--pc);border-color:var(--pc);color:var(--surface)}
+.card{display:none;flex-direction:column;gap:16px;padding-block:6px 120px}.card.on{display:flex}
+.chead{display:flex;flex-direction:column;gap:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--surface2);color:var(--muted)}
+.chip.rev{background:var(--p1bg);color:var(--p1)}.chip.new{background:var(--p2bg);color:var(--p2)}.chip.nxt{background:var(--p3bg);color:var(--p3)}.chip.pts{background:none;border:2px solid var(--line);color:var(--pts)}
+.intro{font-size:18px;color:var(--muted)}
+.kwl{font-size:16px}.kwl b{color:var(--pc)}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav .wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding-block:10px}
+.bnav .pos{font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted);font-size:15px;text-align:center}
+.bnav .nx{justify-self:end}.bnav #bPrev{justify-self:start}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;font-weight:700;min-height:46px}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line)}.btn.sm{padding:6px 14px;font-size:16px;min-height:40px}.btn:disabled{opacity:.4;cursor:default}
+.btn.tone{background:var(--pc);color:var(--surface)}
+/* activities */
+.q{display:flex;flex-direction:column;gap:8px}.q .qq{font-weight:700}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 14px;min-height:48px}
+.opt:hover{border-color:var(--accent)}.opt.right{border-color:var(--good);background:var(--goodbg)}.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.fb{border-radius:10px;padding:8px 12px;font-size:16px}.fb.ok{background:var(--goodbg)}.fb.no{background:var(--badbg)}
+.fb:empty{display:none}
+.ord .ans,.ord .pool{display:flex;flex-direction:column;gap:6px;min-height:52px;border-radius:12px;padding:8px}
+.ord .ans{border:2px dashed var(--line);counter-reset:o}.ord .pool{background:var(--surface2)}
+.ord .ans button,.ord .pool button{display:flex;gap:10px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:8px 12px;min-height:46px}
+.ord .ans button::before{counter-increment:o;content:counter(o);flex:none;width:24px;height:24px;border-radius:50%;background:var(--pc);color:var(--surface);font-size:13px;font-weight:700;display:grid;place-items:center}
+.ord .ans button.right{border-color:var(--good);background:var(--goodbg)}.ord .ans button.wrong{border-color:var(--bad);background:var(--badbg)}
+.ord .mono{white-space:pre;font-size:14px;overflow-x:auto}
+.ord .empty{color:var(--muted);font-size:15px;padding:6px}
+.mt{display:grid;gap:10px}
+.mrow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface)}
+.mrow.right{border-color:var(--good);background:var(--goodbg)}.mrow.wrong{border-color:var(--bad);background:var(--badbg)}
+.mrow b{display:flex;gap:8px;align-items:center}
+select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10px;background:var(--bg);padding:6px 8px;font-size:16px}
+.sym{width:54px;height:27px;flex:none}.sym rect,.sym polygon,.sym path{fill:var(--surface);stroke:var(--ink);stroke-width:2.2}
+.srt{display:grid;gap:8px}
+.sitem{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+.sitem.right{border-color:var(--good);background:var(--goodbg)}.sitem.wrong{border-color:var(--bad);background:var(--badbg)}
+.sitem .sb{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sitem .sb button{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 8px;font-weight:700;font-size:16px;min-height:42px}
+.sitem .why{font-size:15px;color:var(--muted)}
+/* tally */
+.tally{display:grid;gap:8px}
+.trow{display:grid;grid-template-columns:110px minmax(0,1fr) 40px;gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--surface);text-align:left;min-height:52px}
+.trow .mk{font-family:var(--mono);font-size:22px;letter-spacing:2px;color:var(--pc);font-weight:600}
+.trow .tt{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.trow.shake{animation:sh .3s}@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.saybox{display:flex;align-items:center;gap:12px;background:var(--pcbg);border-radius:14px;padding:12px 14px;font-size:19px}
+.saybox .who{font-size:30px}.saybox b{font-family:var(--display);font-size:24px}
+/* nesting boxes */
+.nest{border:3px solid var(--d1);border-radius:14px;padding:24px 12px 12px;position:relative}
 .nest .nest{border-color:var(--d2);margin-top:10px}.nest .nest .nest{border-color:var(--d3)}
-.nest>b{position:absolute;top:-14px;left:14px;background:var(--surface);padding:0 8px;font-size:16px;color:var(--d1)}
-.nest .nest>b{color:var(--d2)}.nest .nest .nest>b{color:var(--d3)}
-.nest>span{font-size:17px}
-.projmap{display:grid;grid-template-columns:1fr;gap:8px}
-.projmap div{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg)}
-.projmap b{font-family:var(--display);font-size:18px;margin-right:6px}.projmap span{font-size:16px;color:var(--muted)}
-.kw{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.kw div{border-left:4px solid var(--accent);background:var(--bg);border-radius:0 10px 10px 0;padding:6px 12px}
-.kw b{display:block}.kw span{font-size:16px;color:var(--muted)}
-/* code with depth guides */
-pre.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:12px 0;margin:0;overflow-x:auto;font-size:16px;line-height:1.65}
-pre.code .l{display:block;padding:0 16px;white-space:pre;border-left:4px solid transparent;transition:background .2s}
-pre.code .l.hl{background:rgba(255,190,92,.3);border-left-color:var(--xp);font-weight:600}
+.nest>b{position:absolute;top:-14px;left:12px;background:var(--surface);padding:0 8px;font-size:16px;color:var(--d1)}
+.nest .nest>b{color:var(--d2)}.nest .nest .nest>b{color:var(--d3)}.nest>span{font-size:16px}
+.projmap{display:grid;gap:8px}.projmap div{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg);font-size:16px}
+.projmap b{font-family:var(--display);font-size:17px;margin-right:4px}
+/* code */
+pre.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:10px 0;margin:0;overflow-x:auto;font-size:15px;line-height:1.65}
+pre.code .l{display:block;padding:0 14px;white-space:pre;border-left:4px solid transparent;transition:background .2s}
+pre.code .l.hl{background:rgba(255,190,92,.3);border-left-color:var(--pts);font-weight:600}
 .ind{display:inline-block;width:4ch;height:1.65em;vertical-align:top;border-left:2px solid}
 .ind.i1{border-color:var(--d1)}.ind.i2{border-color:var(--d2)}.ind.i3{border-color:var(--d3)}
-/* questions */
-.q{display:flex;flex-direction:column;gap:8px}.q p.qq{font-weight:700}
-.opts{display:grid;gap:8px}.opts button{text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:9px 12px}
-.opts button:hover{border-color:var(--accent)}.opts button.right{border-color:var(--good);background:var(--goodbg)}.opts button.wrong{border-color:var(--bad);background:var(--badbg)}
-.fb{border-radius:10px;padding:8px 12px;font-size:17px}.fb.ok{background:var(--goodbg)}.fb.no{background:var(--badbg)}
+/* three ways */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface2);border-radius:12px;padding:4px}
+.seg button{border:0;background:none;border-radius:9px;padding:8px 4px;font-weight:700;font-size:15px;min-height:40px}
+.seg button.on{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.three>div{display:none}.three>div.on{display:block}.three h3{font-size:16px;margin-bottom:6px;display:none}
+.stepnote{background:var(--bg);border-left:4px solid var(--pts);border-radius:0 10px 10px 0;padding:8px 12px;min-height:76px}
+svg.fc{width:100%;max-width:330px;display:block;margin:auto}
+svg.fc .n{fill:var(--surface);stroke:var(--muted);stroke-width:2;transition:fill .25s,stroke .25s}
+svg.fc .n.d.loop{stroke:var(--d1)}svg.fc .n.d.if{stroke:var(--d2)}svg.fc .n.hl{fill:var(--hlfill);stroke:var(--pts);stroke-width:3}
+svg.fc text{font:14px var(--body);fill:var(--ink);text-anchor:middle}svg.fc text.lab{font-size:12px;font-weight:700;fill:var(--muted)}
+svg.fc .ar,svg.fc .ln{stroke:var(--muted);stroke-width:2;fill:none}svg.fc .ar{marker-end:url(#ah)}svg.fc .ahd{fill:var(--muted)}svg.fc .back{stroke:var(--d1);stroke-dasharray:5 4}
+/* editor */
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.tabs button{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 10px;text-align:left;font-weight:700;font-size:15px;line-height:1.25}
+.tabs button small{display:block;font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.tabs button.on{border-color:var(--pc)}.tabs button.done{background:var(--goodbg);border-color:var(--good)}
+.edw{display:flex;border-radius:12px;overflow:hidden;background:var(--code-bg);border:2px solid var(--code-bg)}.edw:focus-within{border-color:var(--accent)}
+.edw .gut{padding:10px 6px 10px 8px;color:var(--code-muted);font-family:var(--mono);font-size:15px;line-height:1.6;text-align:right;white-space:pre;user-select:none}
+.edw textarea{flex:1;min-width:0;border:0;outline:0;resize:vertical;background:transparent;color:var(--code-ink);font-size:15px;line-height:1.6;padding:10px;white-space:pre;overflow-x:auto;tab-size:4}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tools button{border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:4px 10px;font-weight:700;font-size:15px;min-height:38px}
+pre.out{background:var(--surface2);border-radius:12px;padding:10px 14px;margin:0;min-height:48px;white-space:pre-wrap;font-size:15px;overflow-wrap:anywhere}
+pre.out .e{color:var(--bad);font-weight:700}pre.out .ok{color:var(--good);font-weight:700}
+pre.want{background:var(--bg);border:2px dashed var(--line);border-radius:12px;padding:8px 14px;margin:0;font-size:15px;white-space:pre-wrap}
+.hint{background:var(--p3bg);border-radius:10px;padding:8px 12px;font-size:16px}
+/* test table */
+.ttab{display:grid;gap:10px}
+.trc{border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);display:grid;gap:8px}
+.trc.right{border-color:var(--good)}.trc.wrong{border-color:var(--bad)}
+.trc .hd{display:flex;justify-content:space-between;gap:8px;font-weight:700}.trc .hd code{font-size:17px}
+.trc .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.trc label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.trc .act{font-size:15px}.trc .act b{color:var(--good)}
 /* embeds */
 .frame{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface2)}
 .frame iframe{display:block;width:100%;border:0;background:#fff}
-.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:240px;padding:20px;text-align:center;color:var(--muted)}
-.ph b{color:var(--ink);font-family:var(--display);font-size:22px}
-.note{font-size:16px;color:var(--muted)}
-/* three ways */
-.three{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.95fr);gap:16px;align-items:start}
-.three h3{font-size:17px;margin-bottom:6px}
-svg.fc{width:100%;max-width:330px;display:block;margin:auto}
-svg.fc .n{fill:var(--surface);stroke:var(--muted);stroke-width:2;transition:fill .25s,stroke .25s}
-svg.fc .n.d.loop{stroke:var(--d1)}svg.fc .n.d.if{stroke:var(--d2)}
-svg.fc .n.hl{fill:var(--hlfill);stroke:var(--xp);stroke-width:3}
-svg.fc text{font:14px var(--body);fill:var(--ink);text-anchor:middle}svg.fc text.lab{font-size:12px;font-weight:700;fill:var(--muted)}
-svg.fc .ar,svg.fc .ln{stroke:var(--muted);stroke-width:2;fill:none}svg.fc .ar{marker-end:url(#ah)}svg.fc .ahd{fill:var(--muted)}svg.fc .back{stroke:var(--d1);stroke-dasharray:5 4}
-.stepbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.stepbar .sn{font-weight:700;font-variant-numeric:tabular-nums}
-.stepnote{background:var(--bg);border-left:4px solid var(--xp);border-radius:0 10px 10px 0;padding:8px 12px}
-/* playground */
-.tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tabs button{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;text-align:left}
-.tabs button small{display:block;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.tabs button.on{border-color:var(--accent)}.tabs button.done{background:var(--goodbg);border-color:var(--good)}
-.ed{display:flex;border-radius:12px;overflow:hidden;background:var(--code-bg);border:2px solid var(--code-bg)}.ed:focus-within{border-color:var(--accent)}
-.ed .gut{padding:12px 8px;color:var(--code-muted);font-family:var(--mono);font-size:16px;line-height:1.6;text-align:right;white-space:pre;user-select:none}
-.ed textarea{flex:1;min-width:0;border:0;outline:0;resize:vertical;background:transparent;color:var(--code-ink);font-size:16px;line-height:1.6;padding:12px;white-space:pre;overflow-x:auto;tab-size:4}
-pre.out{background:var(--surface2);border-radius:12px;padding:10px 14px;margin:0;min-height:48px;white-space:pre-wrap;font-size:16px}
-pre.out .e{color:var(--bad);font-weight:700}pre.out .ok{color:var(--good);font-weight:700}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:200px;padding:18px;text-align:center;color:var(--muted)}
+.ph b{color:var(--ink);font-family:var(--display);font-size:21px}
 /* dash */
-.dash{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-.dstat{display:flex;justify-content:space-between;font-weight:700;font-size:21px;font-variant-numeric:tabular-nums}.dstat .t{color:var(--xp)}.dstat .c{color:var(--d2)}
-.dcard{border:3px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
+.dstat{display:flex;justify-content:space-between;font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}.dstat .t{color:var(--pts)}.dstat .c{color:var(--d2)}
+.dcard{border:3px solid var(--line);border-radius:16px;padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
 .dcard.ok{border-color:var(--good)}.dcard.no{border-color:var(--bad)}
-.job{font-weight:700;font-size:20px;text-align:center}
-.slot{background:rgba(255,190,92,.22);outline:2px dashed var(--xp);border-radius:4px;padding:0 4px}
-.dbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.dbtns button{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 6px;font-weight:700}
-.dbtns button small{display:block;font-family:var(--mono);font-size:13px;color:var(--muted);white-space:pre}
+.job{font-weight:700;font-size:19px;text-align:center}
+.slot{background:rgba(255,190,92,.25);outline:2px dashed var(--pts);border-radius:4px;padding:0 4px}
+.dbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dbtns button{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 4px;font-weight:700;min-height:64px}
+.dbtns button small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);white-space:pre}
 .dbtns button.i1{border-bottom:4px solid var(--d1)}.dbtns button.i2{border-bottom:4px solid var(--d2)}
-.res{font-size:17px;text-align:center;min-height:1.5em}
-/* badges */
-.blist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.blist div{border:2px dashed var(--line);border-radius:14px;padding:12px 14px;opacity:.6}
-.blist div.on{border-style:solid;border-color:var(--xp);opacity:1}
-.blist b{display:block;font-family:var(--display);font-size:19px}.blist span{font-size:16px;color:var(--muted)}
-input.txt{width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 12px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--ink);color:var(--surface);font-weight:700;border-radius:999px;padding:10px 20px;z-index:40;transition:transform .3s}
-.toast.show{transform:translate(-50%,0)}
-.slider{width:100%;accent-color:var(--accent)}
-@media (max-width:980px){.three{grid-template-columns:1fr}}
-@media (max-width:860px){.shell{grid-template-columns:1fr}.rail{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .rail button{grid-template-columns:auto auto;white-space:nowrap;flex:none;border:2px solid var(--line);background:var(--surface)}.rail button .x{display:none}
-  .two,.wide,.projmap{grid-template-columns:1fr}.bdg{font-size:17px}body{font-size:18px}}
+.res{font-size:16px;text-align:center;min-height:1.5em}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,200%);background:var(--ink);color:var(--surface);font-weight:700;border-radius:999px;padding:10px 20px;z-index:40;transition:transform .3s,opacity .3s;white-space:nowrap;opacity:0;visibility:hidden}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+.done-note{display:flex;gap:10px;align-items:center;background:var(--goodbg);border-radius:12px;padding:10px 14px;font-weight:700}
+.done-note[hidden]{display:none}
+@media (min-width:700px){
+  .parts{grid-template-columns:repeat(3,minmax(0,1fr))}.pc{grid-template-columns:1fr;align-items:start}
+  .sitem{grid-template-columns:minmax(0,1fr) 260px;align-items:center}.sitem .why{grid-column:1/-1}
+  .trow{grid-template-columns:140px minmax(0,1fr) 40px}
+}
+@media (min-width:1000px){
+  #vPart .wrap,.bnav .wrap{max-width:1040px}
+  .three{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.9fr);gap:16px}.three>div{display:block}.three h3{display:block}.seg{display:none}
+}
+@media (max-width:420px){.tabs{grid-template-columns:1fr}.sendg{grid-template-columns:1fr}.mrow{grid-template-columns:1fr}.home span.t{font-size:17px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
-<header class="top"><div class="topin">
-  <div class="brand">Nesting <span>Lab</span></div>
-  <div class="meter"><div class="mbar"><i id="mbar"></i></div><span class="xpn" id="xpn">0 XP</span><span class="rank" id="rank">Rookie</span></div>
-  <div class="bdg" id="bdg" aria-label="Badges"></div>
+<header class="top"><div class="wrap topin" id="topin">
+  <button class="home" id="homeBtn" aria-label="All parts"><span class="ar">←</span><span class="t" id="topT">Design Project Homework</span></button>
+  <span class="total" id="total" aria-live="polite">0<small>/ 0 pts</small></span>
 </div></header>
 
-<div class="shell">
-<nav class="rail" id="rail" aria-label="Zones"></nav>
 <main>
-
-<section class="zone" data-z="start" data-t="What is nesting?">
-  <div><p class="eyebrow">Year 8 · Homework to explore · Links to today's lesson, station 4</p>
-  <h1>Nesting: a decision inside a loop</h1>
-  <p class="lead">Today you chose a project and planned it. Every option needs <b>nesting</b>: one structure placed <b>inside</b> another. Work through the zones in order, earn XP and badges, and try again as often as you like.</p></div>
-  <div class="two">
-    <div class="panel stack"><h3>Picture it as boxes inside boxes</h3>
-      <div class="nest"><b>loop</b><span>repeats the steps inside it</span>
-        <div class="nest"><b>if</b><span>is checked every time the loop goes round</span>
-          <div class="nest"><b>action</b><span>runs only when the condition is True</span></div></div></div>
-      <p class="note">The colours stay the same on every page of the Lab: <b style="color:var(--d1)">blue</b> = loop level, <b style="color:var(--d2)">pink</b> = if level, <b style="color:var(--d3)">amber</b> = one more level in.</p></div>
-    <div class="panel stack"><h3>Where nesting is in your project</h3>
-      <div class="projmap"><div><b>Revision quiz</b><span>For each question, <i>if</i> the guess is right, add a point.</span></div>
-        <div><b>Unit converter</b><span>While the user hasn't quit, <i>if</i> they chose 1, convert km.</span></div>
-        <div><b>Text game</b><span>While lives are left, <i>if</i> they pick the dragon door, lose a life.</span></div></div>
-      <div id="q-start"></div></div>
+<section id="vHome" class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Year 8 · Digital Technologies · Homework</p>
+    <h1>Design Project: review, then the next steps</h1>
+    <p class="lead">Part 1 checks what you remember from class. Part 2 teaches the stations we didn't reach. Part 3 gets you ready for next week, when you build your project in Python.</p>
   </div>
-  <div class="panel stack"><h3>Key words</h3><div class="kw" id="kw"></div></div>
-</section>
-
-<section class="zone" data-z="three" data-t="Same idea, three ways">
-  <div><p class="eyebrow">Links to stations 5 and 6: pseudocode and flowchart</p><h2>Same idea, three ways</h2>
-  <p class="lead">Step through the quiz plan. Watch the same step light up in the pseudocode, the Python and the flowchart.</p></div>
-  <div class="panel stack">
-    <div class="stepbar"><button class="btn ghost sm" id="sPrev">← Back</button><button class="btn sm" id="sNext">Next step →</button><span class="sn" id="sNum"></span></div>
-    <div class="stepnote"><b id="sT"></b> <span id="sN"></span></div>
-    <div class="three">
-      <div><h3>Pseudocode</h3><pre class="code" id="psCode"></pre></div>
-      <div><h3>Python</h3><pre class="code" id="pyCode"></pre></div>
-      <div><h3>Flowchart</h3><svg viewBox="0 0 400 520" class="fc" role="img" aria-label="Flowchart of the quiz loop with a nested decision">
-<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="ahd"/></marker></defs>
-<rect id="fc-start" class="n term" x="150" y="6" width="100" height="32" rx="16"/><text x="200" y="27">Start</text>
-<path class="ar" d="M200 38 V54"/>
-<rect id="fc-init" class="n" x="140" y="56" width="120" height="34"/><text x="200" y="78">score ← 0</text>
-<path class="ar" d="M200 90 V112"/>
-<polygon id="fc-loopq" class="n d loop" points="200,114 290,152 200,190 110,152"/><text x="200" y="148">another</text><text x="200" y="165">question?</text>
-<path class="ar" d="M200 190 V212"/><text x="208" y="206" class="lab">yes</text>
-<polygon id="fc-inp" class="n" points="145,214 270,214 255,246 130,246"/><text x="200" y="235">INPUT guess</text>
-<path class="ar" d="M200 246 V266"/>
-<polygon id="fc-dec" class="n d if" points="200,268 282,304 200,340 118,304"/><text x="200" y="300">guess =</text><text x="200" y="317">answer?</text>
-<path class="ar" d="M118 304 H70 V360"/><text x="80" y="296" class="lab">yes</text>
-<rect id="fc-yes" class="n" x="20" y="362" width="100" height="34"/><text x="70" y="384">score + 1</text>
-<path class="ar" d="M282 304 H330 V360"/><text x="296" y="296" class="lab">no</text>
-<rect id="fc-no" class="n" x="280" y="362" width="100" height="34"/><text x="330" y="384">"Wrong"</text>
-<path class="ln" d="M70 396 V416 H392"/><path class="ln" d="M330 396 V416"/><path class="ar back" d="M392 416 V100 H204"/>
-<path class="ar" d="M110 152 H10 V470 H138"/><text x="92" y="144" class="lab">no</text>
-<polygon id="fc-out" class="n" points="150,456 270,456 255,488 135,488"/><text x="202" y="477">OUTPUT score</text>
-<path class="ar" d="M200 488 V500"/><rect id="fc-end" class="n term" x="160" y="500" width="80" height="18" rx="9"/>
-</svg></div>
-    </div>
+  <div class="parts" id="parts"></div>
+  <div class="stack" style="margin-top:18px;padding-bottom:40px">
+    <div class="box how"><div><b>Points</b><span>Right first time earns full points. Right on a later try earns half. You can retry anything.</span></div>
+      <div><b>Saves</b><span>Your work saves on this device. Use the same phone or computer to carry on.</span></div></div>
+    <details class="box"><summary>Key words</summary>
+      <div class="legend"><span style="--c:var(--p1)">Part 1: review</span><span style="--c:var(--p2)">Part 2: new</span><span style="--c:var(--p3)">Part 3: next week</span></div>
+      <div class="vgrid" id="vocab"></div></details>
+    <div class="box stack" id="sendBox"><h2 style="font-size:22px">Send my score</h2>
+      <div class="scoretab" id="scoretab"></div>
+      <div class="sendg"><input class="txt" id="nm" placeholder="Your full name" aria-label="Your full name" autocomplete="name"><input class="txt" id="cls" placeholder="Class, e.g. 8A" aria-label="Class"></div>
+      <div class="row"><button class="btn" id="send">Send to my teacher</button><span id="sendMsg" class="note"></span></div>
+      <p class="note">You can send again later. Your newest score is the one that counts.</p></div>
   </div>
 </section>
 
-<section class="zone" data-z="watch" data-t="Watch: loops in loops">
-  <div><h2>Watch: a loop inside a loop</h2><p class="lead">Bro Code shows nesting with loops. Watch the first few minutes, then answer.</p></div>
-  <div class="two wide">
-    <div class="stack"><div class="frame" id="ytFrame"><div class="ph"><b>Nested loops in Python</b><span>Bro Code · short clip</span><button class="btn" id="ytLoad">Play the video</button></div></div>
-      <p class="note">Video blocked at school? <a href="https://www.youtube.com/watch?v=APWy6Pc83gE" target="_blank" rel="noopener">Open it on YouTube</a></p></div>
-    <div class="panel" id="q-watch"></div>
-  </div>
+<section id="vPart" hidden>
+  <div class="wrap phead" id="phead"><span class="ptag" id="ptag"></span><div class="dots" id="dots" aria-label="Activities"></div></div>
+  <div id="cards"></div>
 </section>
-
-<section class="zone" data-z="trace" data-t="Trace it: Python Tutor">
-  <div><h2>Trace it in Python Tutor</h2><p class="lead">Python Tutor runs code one line at a time. Press <b>Next</b> and watch which lines run inside the loop and inside the if.</p></div>
-  <div class="two wide">
-    <div class="stack"><div class="frame" id="ptFrame"><div class="ph"><b>Python Tutor</b><span>Free, no login</span><button class="btn" id="ptLoad">Load the visualiser</button></div></div>
-      <p class="note">Not showing? <a href="https://pythontutor.com/visualize.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&amp;codeDivHeight=400&amp;codeDivWidth=350&amp;cumulative=false&amp;curInstr=0&amp;heapPrimitives=nevernest&amp;origin=opt-frontend.js&amp;py=3&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false&amp;mode=display" target="_blank" rel="noopener">Open it in Python Tutor</a></p></div>
-    <div class="panel" id="q-trace"></div>
-  </div>
-</section>
-
-<section class="zone" data-z="code" data-t="Code: your project">
-  <div><h2>Code a small piece of your project</h2><p class="lead">Each challenge is a tiny part of one project option. Real Python runs in the page. Pass one for 50 XP. Hints are free.</p></div>
-  <div class="tabs" id="chTabs"></div>
-  <div class="two">
-    <div class="panel stack"><h3 id="chT"></h3><p id="chG"></p><div class="row"><button class="btn ghost sm" id="chHint">Show a hint</button></div><p id="chH" class="note" hidden></p>
-      <p class="eyebrow">Expected output</p><pre class="out" id="chW"></pre></div>
-    <div class="stack"><div class="ed"><div class="gut" id="gut"></div><textarea class="ed" id="ed" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python code"></textarea></div>
-      <div class="row"><button class="btn" id="run">Run</button><button class="btn ghost sm" id="reset">Reset code</button><span class="note" id="resetAsk" hidden>Sure? <button class="btn ghost sm" id="resetYes">Yes, reset</button></span></div>
-      <pre class="out" id="out">Output appears here. The first run loads Python (a few seconds).</pre></div>
-  </div>
-</section>
-
-<section class="zone" data-z="robot" data-t="Play: Reeborg's robot">
-  <div><h2>Play: steer a robot with real Python</h2><p class="lead"><b>Reeborg's World</b> is a free robot puzzle. You write Python, the robot follows it. The hurdle worlds need an <code>if</code> inside a <code>while</code>.</p></div>
-  <div class="two wide">
-    <div class="stack"><div class="frame" id="rbFrame"><div class="ph"><b>Reeborg's World</b><span>Free, no login</span><button class="btn" id="rbLoad">Open the robot here</button></div></div>
-      <p class="note">Too small, or not showing? <a href="https://reeborg.ca/reeborg.html?lang=en&mode=python" target="_blank" rel="noopener">Open Reeborg's World in a new tab</a></p></div>
-    <div class="panel stack"><h3>Mission 1: Hurdle 3</h3>
-      <p>In Reeborg, open the <b>World</b> menu and choose <b>Hurdle 3</b>. Type this, then press the run button:</p>
-      <pre class="code" id="rb1"></pre>
-      <h3>Boss mission: Hurdle 4</h3><p>The walls are different heights. Your <code>jump()</code> needs its own <code>while</code> loops, so there is a loop inside an if inside a loop.</p>
-      <div class="row"><button class="btn ghost sm" id="rbHint">Show the boss hint</button></div><pre class="code" id="rb2" hidden></pre>
-      <p class="eyebrow">Which missions did you finish?</p><div class="row" id="rbDone"></div></div>
-  </div>
-</section>
-
-<section class="zone" data-z="dash" data-t="Game: Indent Dash">
-  <div><h2>Indent Dash</h2><p class="lead">45 seconds. A line needs a home. Choose how far to indent it. Three right in a row doubles your points.</p></div>
-  <div class="dash">
-    <div class="dstat"><span>Score <span id="dS">0</span></span><span class="t" id="dT">45</span><span class="c" id="dC">×1</span></div>
-    <div class="dcard" id="dCard"><p class="job" id="dJob">Press Start</p><pre class="code" id="dCode"></pre>
-      <div class="dbtns"><button data-i="0" disabled>No indent<small>line</small></button><button data-i="1" class="i1" disabled>1 level<small>····line</small></button><button data-i="2" class="i2" disabled>2 levels<small>········line</small></button></div>
-      <p class="res" id="dRes"></p></div>
-    <div class="row" style="justify-content:center"><button class="btn" id="dGo">Start</button><span class="xpn" id="dBest"></span></div>
-    <p class="note" style="text-align:center">Keyboard: press 0, 1 or 2.</p>
-  </div>
-</section>
-
-<section class="zone" data-z="badges" data-t="Badges">
-  <div><h2>Your badges</h2><p class="lead">Collect all seven. Sharing your XP with your teacher is optional.</p></div>
-  <div class="blist" id="blist"></div>
-  <div class="panel stack" style="max-width:640px"><h3>Share my progress</h3>
-    <div class="two" style="gap:10px"><input class="txt" id="nm" placeholder="Your name" aria-label="Your name"><input class="txt" id="cls" placeholder="Class, e.g. 8A" aria-label="Class"></div>
-    <div class="row"><button class="btn" id="send">Send my XP</button><span id="sendMsg" class="note"></span></div></div>
-</section>
-
-</main></div>
+</main>
+<nav class="bnav" id="bnav" hidden><div class="wrap"><button class="btn ghost sm" id="bPrev">← Back</button><span class="pos" id="bPos"></span><button class="btn tone sm nx" id="bNext">Next →</button></div></nav>
 <div class="toast" id="toast" role="status"></div>
+
+<template id="T-p1-0"><div class="chead"><div class="chips"><span class="chip rev">Station 1 · Review</span><span class="chip pts" data-pts></span></div><h2>The design steps</h2>
+  <p class="intro">Designers start with people, not code. Put the steps in order. Tap a step to add it, tap it again to take it back.</p></div>
+  <div class="box" data-act="order:steps"></div>
+  <p class="kwl note"><b>Key words:</b> user · design thinking</p></template>
+
+<template id="T-p1-1"><div class="chead"><div class="chips"><span class="chip rev">Stations 1 and 2 · Review</span><span class="chip pts" data-pts></span></div><h2>Match the key words</h2>
+  <p class="intro">Choose the meaning for each word, then press Check.</p></div>
+  <div class="box" data-act="match:words"></div></template>
+
+<template id="T-p1-2"><div class="chead"><div class="chips"><span class="chip rev">Station 2 · Review</span><span class="chip pts" data-pts></span></div><h2>Tally the survey</h2>
+  <p class="intro">You asked 8 pupils: <i>"Which subject should the revision quiz test?"</i> Tap the right row for each answer. Then turn the data into a client need.</p></div>
+  <div class="box stack" data-act="tally"></div>
+  <div class="box" data-act="mcq:need"></div>
+  <p class="kwl note"><b>Key words:</b> survey · tally · data · client needs</p></template>
+
+<template id="T-p1-3"><div class="chead"><div class="chips"><span class="chip rev">Station 3 · Review</span><span class="chip pts" data-pts></span></div><h2>Good criteria or too vague?</h2>
+  <p class="intro"><b>Contextual criteria</b> are checks you use later to judge your program. Good ones are <b>specific</b> and you can <b>test</b> them.</p></div>
+  <div data-act="sort:criteria"></div>
+  <p class="note">One of the good ones comes from our phishing lesson. A good program protects its users.</p></template>
+
+<template id="T-p2-0"><div class="chead"><div class="chips"><span class="chip new">Station 4 · New</span><span class="chip pts" data-pts></span></div><h2>Nesting: a decision inside a loop</h2>
+  <p class="intro">Every project option needs <b>nesting</b>: one structure placed <b>inside</b> another.</p></div>
+  <div class="box stack"><div class="nest"><b>loop</b><span>repeats the steps inside it</span><div class="nest"><b>if</b><span>is checked every time the loop goes round</span><div class="nest"><b>action</b><span>runs only when the condition is True</span></div></div></div>
+    <p class="note">Colours on every page: <b style="color:var(--d1)">blue</b> = loop level, <b style="color:var(--d2)">pink</b> = if level, <b style="color:var(--d3)">amber</b> = one more level in.</p></div>
+  <div class="box stack"><h3>Where nesting is in your project</h3><div class="projmap"><div><b>Revision quiz</b>For each question, <i>if</i> the guess is right, add a point.</div>
+    <div><b>Unit converter</b>While the user hasn't quit, <i>if</i> they chose 1, convert km.</div><div><b>Text game</b>While lives are left, <i>if</i> they pick the dragon door, lose a life.</div></div></div>
+  <div class="box" data-act="mcq:nest"></div>
+  <p class="kwl note"><b>Key words:</b> loop · selection · nested · indentation</p></template>
+
+<template id="T-p2-1"><div class="chead"><div class="chips"><span class="chip new">Station 4 · New</span><span class="chip pts" data-pts></span></div><h2>Watch: a loop inside a loop</h2>
+  <p class="intro">Nesting also works with two loops. Watch the first few minutes, then answer.</p></div>
+  <div class="frame" data-embed="yt"><div class="ph"><b>Nested loops in Python</b><span>Bro Code · short clip</span><button class="btn">Play the video</button></div></div>
+  <p class="note">Video blocked? <a href="https://www.youtube.com/watch?v=APWy6Pc83gE" target="_blank" rel="noopener">Open it on YouTube</a></p>
+  <div class="box" data-act="mcq:watch"></div></template>
+
+<template id="T-p2-2"><div class="chead"><div class="chips"><span class="chip new">Station 4 · Game</span><span class="chip pts" data-pts></span></div><h2>Indent Dash</h2>
+  <p class="intro">45 seconds. Choose how far to indent each line. Three right in a row doubles your points. A game score of 80 earns all 40 points.</p></div>
+  <div data-act="dash"></div></template>
+
+<template id="T-p2-3"><div class="chead"><div class="chips"><span class="chip new">Stations 5 and 6 · New</span><span class="chip pts" data-pts></span></div><h2>Same plan, three ways</h2>
+  <p class="intro">The same quiz plan as pseudocode, Python and a flowchart. Step through it and watch the same step light up.</p></div>
+  <div class="box stack" data-act="three"></div>
+  <p class="kwl note"><b>Key words:</b> pseudocode · flowchart · decision · loop</p></template>
+
+<template id="T-p2-4"><div class="chead"><div class="chips"><span class="chip new">Station 5 · New</span><span class="chip pts" data-pts></span></div><h2>Put the plan in order</h2>
+  <p class="intro">This is the text game plan in pseudocode, but the lines are mixed up. The indents are a clue: they show what is nested inside what.</p></div>
+  <div class="box" data-act="order:ps"></div>
+  <p class="note">Need a refresher? <a href="https://www.youtube.com/watch?v=HhBrkpTqzqg" target="_blank" rel="noopener">Pseudocode in a few minutes (5toCode)</a></p></template>
+
+<template id="T-p2-5"><div class="chead"><div class="chips"><span class="chip new">Station 6 · New</span><span class="chip pts" data-pts></span></div><h2>Flowchart shapes</h2>
+  <p class="intro">Each shape has one job. Match each shape to its meaning.</p></div>
+  <div class="box" data-act="match:symbols"></div>
+  <p class="note">Draw your own flowchart for free at <a href="https://app.diagrams.net/" target="_blank" rel="noopener">diagrams.net</a> (choose Device to save), or on paper.</p></template>
+
+<template id="T-p2-6"><div class="chead"><div class="chips"><span class="chip new">Station 7 · New</span><span class="chip pts" data-pts></span></div><h2>Plan: time, resources, costs</h2>
+  <p class="intro">Every project needs a plan: <b>when</b>, <b>what you need</b> and <b>what it costs</b>.</p></div>
+  <div class="box stack"><h3>1. Put the milestones in order</h3><div data-act="order:ms"></div></div>
+  <div class="box stack"><h3>2. Free resource or a cost?</h3><div data-act="sort:costs"></div></div>
+  <div class="box stack" data-act="cost"></div>
+  <div class="box" data-act="mcq:risk"></div>
+  <p class="kwl note"><b>Key words:</b> milestone · resources · costs</p></template>
+
+<template id="T-p3-0"><div class="chead"><div class="chips"><span class="chip nxt">Design Project II · Implement</span><span class="chip pts" data-pts></span></div><h2>Code a small piece of your project</h2>
+  <p class="intro">Real Python runs in the page. Each challenge is a tiny part of one project option. Hints are free.</p></div>
+  <div data-act="code:main"></div></template>
+
+<template id="T-p3-1"><div class="chead"><div class="chips"><span class="chip nxt">Design Project II · Trace</span><span class="chip pts" data-pts></span></div><h2>Trace it in Python Tutor</h2>
+  <p class="intro">Tracing means following code one line at a time. Press <b>Next</b> in Python Tutor and watch which lines run inside the loop and inside the if.</p></div>
+  <div class="frame" data-embed="pt"><div class="ph"><b>Python Tutor</b><span>Free, no login</span><button class="btn">Load the visualiser</button></div></div>
+  <p class="note">Not showing, or too small on a phone? <a href="https://pythontutor.com/visualize.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&amp;codeDivHeight=400&amp;codeDivWidth=350&amp;cumulative=false&amp;curInstr=0&amp;heapPrimitives=nevernest&amp;origin=opt-frontend.js&amp;py=3&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false&amp;mode=display" target="_blank" rel="noopener">Open it in Python Tutor</a></p>
+  <div class="box" data-act="mcq:trace"></div></template>
+
+<template id="T-p3-2"><div class="chead"><div class="chips"><span class="chip nxt">Design Project II · Test</span><span class="chip pts" data-pts></span></div><h2>Fill in a test-case table</h2>
+  <p class="intro">A <b>test case</b> is an input with its expected output. Test three kinds of data: <b>normal</b> (usual), <b>boundary</b> (right at the edge) and <b>invalid</b> (should be rejected).</p></div>
+  <pre class="code" data-code="tests"></pre>
+  <div class="box" data-act="tests"></div></template>
+
+<template id="T-p3-3"><div class="chead"><div class="chips"><span class="chip nxt">Design Project II · Debug</span><span class="chip pts" data-pts></span></div><h2>Debug: find and fix two bugs</h2>
+  <p class="intro">There are two kinds of error. Learn their names, then fix the code.</p></div>
+  <div class="box" data-act="mcq:debug"></div>
+  <div data-act="code:debug"></div></template>
+
+<template id="T-p3-4"><div class="chead"><div class="chips"><span class="chip nxt">Design Project II · Modify</span><span class="chip pts" data-pts></span></div><h2>Modify after client feedback</h2>
+  <p class="intro">Clients often ask for a change once they try your program. Save a version first, then make the change.</p></div>
+  <div class="box" data-act="mcq:modify"></div>
+  <div data-act="code:modify"></div></template>
+
+<template id="T-p3-5"><div class="chead"><div class="chips"><span class="chip nxt">Bonus</span><span class="chip pts" data-pts></span></div><h2>Bonus: steer a robot with Python</h2>
+  <p class="intro"><b>Reeborg's World</b> is a free robot puzzle. You type Python and the robot follows it. Best on a computer or tablet.</p></div>
+  <div class="frame" data-embed="rb"><div class="ph"><b>Reeborg's World</b><span>Free, no login</span><button class="btn">Open the robot here</button></div></div>
+  <p class="note">Too small? <a href="https://reeborg.ca/reeborg.html?lang=en&mode=python" target="_blank" rel="noopener">Open Reeborg's World in a new tab</a></p>
+  <div class="box stack"><h3>Mission 1: Hurdle 3</h3><p>Open the <b>World</b> menu and choose <b>Hurdle 3</b>. Type this, then press run. Spot the <b>if inside the while</b>.</p>
+    <pre class="code" data-code="rb1"></pre>
+    <h3>Mission 2: Hurdle 4</h3><p>The walls are different heights, so <code>jump()</code> needs its own <code>while</code> loops.</p>
+    <details><summary class="btn ghost sm" style="display:inline-flex;align-items:center">Show the hint</summary><pre class="code" data-code="rb2" style="margin-top:10px"></pre></details>
+    <p class="eyebrow">Which did you finish?</p><div class="row" data-act="robot"></div></div></template>
+
 <script type="text/plain" id="harness">
 import sys, io, traceback, js
 class _Stop(Exception):
@@ -323,108 +392,205 @@ def run_code(src, inputs, interactive):
     return [s, err]
 </script>
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbwUrLnXjM_bDseaTCzHlZ_U-plyEvTrtwLpZF8KSN8JcE7ukzz4FXTJPXxul6LUSNOdzQ/exec",PYODIDE_URL="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js",PT="https://pythontutor.com/iframe-embed.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false",REEBORG="https://reeborg.ca/reeborg.html?lang=en&mode=python";
-const CH=[{"id": "quiz", "proj": "Revision quiz", "title": "Mark the quiz", "goal": "For each guess, print <code>Correct!</code> or <code>Wrong!</code>, then the score. You need an <b>if inside a loop</b>.", "start": "answers = [\"vientiane\", \"30\", \"cold\"]\nguesses = [\"vientiane\", \"31\", \"cold\"]\nscore = 0\nfor i in range(3):\n    print(guesses[i])\nprint(\"Score:\", score)", "want": ["Correct!", "Wrong!", "Correct!", "Score: 2"], "hint": "Replace <code>print(guesses[i])</code> with <code>if guesses[i] == answers[i]:</code> and indent two lines under it: print Correct! and add 1 to score. Then <code>else:</code> with print Wrong!"}, {"id": "conv", "proj": "Unit converter", "title": "Run the menu", "goal": "For each menu choice: <code>1</code> converts 10 km to miles, <code>2</code> converts 10 \u00b0C to \u00b0F, anything else prints <code>Goodbye</code>. Selection <b>inside a loop</b>.", "start": "choices = [\"1\", \"2\", \"3\"]\nvalue = 10\nfor choice in choices:\n    print(\"You chose\", choice)", "want": ["10 km = 6.21 miles", "10 C = 50.0 F", "Goodbye"], "hint": "Inside the loop: <code>if choice == \"1\":</code> print <code>value, \"km =\", round(value * 0.621, 2), \"miles\"</code>. <code>elif choice == \"2\":</code> print <code>value, \"C =\", value * 9 / 5 + 32, \"F\"</code>. <code>else:</code> print Goodbye."}, {"id": "game", "proj": "Text game", "title": "Dragon doors", "goal": "Right door: lose a life and print <code>Dragon! Lives:</code> and the lives left. If lives reach 0, print <code>Game over</code>. Left door: print <code>Safe</code>. That's an <b>if inside an if inside a loop</b>.", "start": "doors = [\"left\", \"right\", \"right\"]\nlives = 2\nfor door in doors:\n    print(door)", "want": ["Safe", "Dragon! Lives: 1", "Dragon! Lives: 0", "Game over"], "hint": "<code>if door == \"right\":</code> then (indented) <code>lives = lives - 1</code>, print Dragon!, and a second <code>if lives == 0:</code> with print Game over indented one more level. <code>else:</code> print Safe."}],DASH=[{"ctx": ["for i in range(3):", "    if i == 1:", "\u25a2"], "line": "print(\"one!\")", "job": "Print only when i is 1", "a": 2}, {"ctx": ["for i in range(3):", "    print(i)", "\u25a2"], "line": "print(\"Done\")", "job": "Print once, after the loop", "a": 0}, {"ctx": ["for i in range(3):", "\u25a2"], "line": "print(i)", "job": "Print every time round the loop", "a": 1}, {"ctx": ["if score > 5:", "\u25a2"], "line": "print(\"Well done\")", "job": "Only when the score is over 5", "a": 1}, {"ctx": ["while lives > 0:", "    door = input()", "    if door == \"right\":", "\u25a2"], "line": "lives = lives - 1", "job": "Lose a life only on the right door", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "\u25a2"], "line": "score = score + 1", "job": "Add a point for each right guess", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "        score = score + 1", "\u25a2"], "line": "print(\"Score:\", score)", "job": "Show the score once, at the end", "a": 0}, {"ctx": ["for row in range(3):", "    for col in range(4):", "\u25a2"], "line": "print(\"#\", end=\"\")", "job": "A # for every column", "a": 2}, {"ctx": ["for row in range(3):", "    for col in range(4):", "        print(\"#\", end=\"\")", "\u25a2"], "line": "print()", "job": "A new line after each row", "a": 1}, {"ctx": ["\u25a2", "for q in questions:", "    ..."], "line": "score = 0", "job": "Set up once, before the loop", "a": 0}, {"ctx": ["if age > 12:", "    print(\"Adult ticket\")", "else:", "\u25a2"], "line": "print(\"Child ticket\")", "job": "Only when age is 12 or less", "a": 1}, {"ctx": ["while choice != \"3\":", "    choice = input()", "    if choice == \"1\":", "\u25a2"], "line": "print(km * 0.621)", "job": "Convert only when the choice is 1", "a": 2}],PS=["score \u2190 0", "FOR each question", "    INPUT guess", "    IF guess = answer THEN", "        score \u2190 score + 1", "    ELSE", "        OUTPUT \"Wrong\"", "    END IF", "END FOR", "OUTPUT score"],PY=["score = 0", "for q in questions:", "    guess = input(q)", "    if guess == answer:", "        score = score + 1", "    else:", "        print(\"Wrong\")", "print(score)"],STEPS=[{"t": "Set up", "n": "The score starts at 0. This runs once, before the loop.", "ps": [0], "py": [0], "fc": "init"}, {"t": "The loop asks: another question?", "n": "This is the loop. If yes, we go inside it.", "ps": [1], "py": [1], "fc": "loopq"}, {"t": "Inside the loop: get a guess", "n": "Indented once: it runs every time round.", "ps": [2], "py": [2], "fc": "inp"}, {"t": "Nested decision: is it right?", "n": "An IF inside the loop. This is the nesting!", "ps": [3], "py": [3], "fc": "dec"}, {"t": "Yes path", "n": "Indented twice: only when the guess is right.", "ps": [4], "py": [4], "fc": "yes"}, {"t": "No path", "n": "ELSE: only when the guess is wrong.", "ps": [5, 6], "py": [5, 6], "fc": "no"}, {"t": "Back to the top", "n": "The arrow goes back up. The loop asks again.", "ps": [7, 8], "py": [1], "fc": "loopq"}, {"t": "Loop finished: show the score", "n": "No more questions, so we leave the loop. Runs once.", "ps": [9], "py": [7], "fc": "out"}],QQ=[{"q": "What tells Python that a line is <b>inside</b> a loop or an if?", "o": ["The indentation (spaces at the start)", "A comma at the end", "Capital letters", "The line number"], "a": 0, "why": "Indented lines belong to the line above that ends with a colon."}, {"q": "An <code>if</code> inside a <code>for</code> loop is checked\u2026", "o": ["every time the loop goes round", "only once", "never", "before the loop starts"], "a": 0, "why": "Everything inside the loop repeats, including the if."}],WQ=[{"q": "In the video, how many times does the inner loop run in total for 3 rows of 4?", "o": ["12", "7", "4", "3"], "a": 0, "why": "4 each time \u00d7 3 rows = 12."}, {"q": "Where does <code>print()</code> go to start a new row?", "o": ["Inside the outer loop, after the inner loop", "Inside the inner loop", "Before both loops", "It isn't needed"], "a": 0, "why": "Once per row, so outer loop level."}],TQ=[{"q": "How many times does the <code>if</code> line run?", "o": ["4 times, once per guess", "Once", "3 times", "Never"], "a": 0, "why": "It is inside the loop, so it runs for every guess."}, {"q": "How many times does <code>print(\"Wrong!\")</code> run?", "o": ["1 time", "4 times", "3 times", "0 times"], "a": 0, "why": "Only the \"no\" guess goes down the else path."}];
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwUrLnXjM_bDseaTCzHlZ_U-plyEvTrtwLpZF8KSN8JcE7ukzz4FXTJPXxul6LUSNOdzQ/exec",PYODIDE_URL="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js",PT="https://pythontutor.com/iframe-embed.html#code=score%20%3D%200%0Aguesses%20%3D%20%5B%22yes%22%2C%20%22no%22%2C%20%22yes%22%2C%20%22yes%22%5D%0Afor%20g%20in%20guesses%3A%0A%20%20%20%20if%20g%20%3D%3D%20%22yes%22%3A%0A%20%20%20%20%20%20%20%20score%20%3D%20score%20%2B%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28%22Wrong%21%22%29%0Aprint%28%22Score%3A%22%2C%20score%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false",REEBORG="https://reeborg.ca/reeborg.html?lang=en&mode=python",FLOW="<svg viewBox=\"0 0 400 520\" class=\"fc\" role=\"img\" aria-label=\"Flowchart of the quiz loop with a nested decision\">\n<defs><marker id=\"ah\" markerWidth=\"8\" markerHeight=\"8\" refX=\"7\" refY=\"4\" orient=\"auto\"><path d=\"M0,0 L8,4 L0,8 z\" class=\"ahd\"/></marker></defs>\n<rect class=\"n term\" x=\"150\" y=\"6\" width=\"100\" height=\"32\" rx=\"16\"/><text x=\"200\" y=\"27\">Start</text>\n<path class=\"ar\" d=\"M200 38 V54\"/>\n<rect id=\"fc-init\" class=\"n\" x=\"140\" y=\"56\" width=\"120\" height=\"34\"/><text x=\"200\" y=\"78\">score \u2190 0</text>\n<path class=\"ar\" d=\"M200 90 V112\"/>\n<polygon id=\"fc-loopq\" class=\"n d loop\" points=\"200,114 290,152 200,190 110,152\"/><text x=\"200\" y=\"148\">another</text><text x=\"200\" y=\"165\">question?</text>\n<path class=\"ar\" d=\"M200 190 V212\"/><text x=\"208\" y=\"206\" class=\"lab\">yes</text>\n<polygon id=\"fc-inp\" class=\"n\" points=\"145,214 270,214 255,246 130,246\"/><text x=\"200\" y=\"235\">INPUT guess</text>\n<path class=\"ar\" d=\"M200 246 V266\"/>\n<polygon id=\"fc-dec\" class=\"n d if\" points=\"200,268 282,304 200,340 118,304\"/><text x=\"200\" y=\"300\">guess =</text><text x=\"200\" y=\"317\">answer?</text>\n<path class=\"ar\" d=\"M118 304 H70 V360\"/><text x=\"80\" y=\"296\" class=\"lab\">yes</text>\n<rect id=\"fc-yes\" class=\"n\" x=\"20\" y=\"362\" width=\"100\" height=\"34\"/><text x=\"70\" y=\"384\">score + 1</text>\n<path class=\"ar\" d=\"M282 304 H330 V360\"/><text x=\"296\" y=\"296\" class=\"lab\">no</text>\n<rect id=\"fc-no\" class=\"n\" x=\"280\" y=\"362\" width=\"100\" height=\"34\"/><text x=\"330\" y=\"384\">\"Wrong\"</text>\n<path class=\"ln\" d=\"M70 396 V416 H392\"/><path class=\"ln\" d=\"M330 396 V416\"/><path class=\"ar back\" d=\"M392 416 V100 H204\"/>\n<path class=\"ar\" d=\"M110 152 H10 V470 H138\"/><text x=\"92\" y=\"144\" class=\"lab\">no</text>\n<polygon id=\"fc-out\" class=\"n\" points=\"150,456 270,456 255,488 135,488\"/><text x=\"202\" y=\"477\">OUTPUT score</text>\n<path class=\"ar\" d=\"M200 488 V500\"/><rect class=\"n term\" x=\"160\" y=\"500\" width=\"80\" height=\"18\" rx=\"9\"/>\n</svg>",SYM={"oval": "<svg viewBox=\"0 0 60 30\" class=\"sym\"><rect x=\"3\" y=\"5\" width=\"54\" height=\"20\" rx=\"10\"/></svg>", "para": "<svg viewBox=\"0 0 60 30\" class=\"sym\"><polygon points=\"14,5 57,5 46,25 3,25\"/></svg>", "rect": "<svg viewBox=\"0 0 60 30\" class=\"sym\"><rect x=\"6\" y=\"5\" width=\"48\" height=\"20\"/></svg>", "dia": "<svg viewBox=\"0 0 60 30\" class=\"sym\"><polygon points=\"30,2 56,15 30,28 4,15\"/></svg>", "back": "<svg viewBox=\"0 0 60 30\" class=\"sym\"><path d=\"M8 26 H50 V6 H16\" fill=\"none\"/><path d=\"M18 2 L10 6 L18 10\" fill=\"none\"/></svg>"};
+const D={"parts": [{"id": "p1", "n": 1, "name": "Review", "sub": "What we did in class: stations 1 to 3", "col": "--p1"}, {"id": "p2", "n": 2, "name": "New learning", "sub": "What we didn't reach: stations 4 to 7", "col": "--p2"}, {"id": "p3", "n": 3, "name": "Get ready", "sub": "Next topic: Design Project II", "col": "--p3"}], "order_steps": {"items": ["Understand the user", "Plan", "Build", "Test", "Improve"]}, "match_words": [["client", "the person or group you make the program for"], ["user", "the person who uses the program"], ["design brief", "the task you are given"], ["client needs", "what the client wants, found from data"], ["survey", "questions you ask people"], ["tally", "marks to count answers: ||||"], ["data", "facts you collect"]], "survey": ["Maths", "Science", "Maths", "English", "Maths", "Science", "Maths", "English"], "need_q": {"q": "Which is the best <b>client need</b> from this tally?", "o": ["The quiz needs Maths questions because 4 out of 8 pupils chose it.", "The quiz should be fun.", "I like Science, so the quiz will be Science.", "The quiz needs Maths questions."], "a": 0, "why": "It says what the client needs <b>and</b> quotes the number from the data."}, "criteria": [["Shows the score at the end.", 0], ["It should be fun.", 1], ["One round takes under 5 minutes.", 0], ["People will like it.", 1], ["Never asks for passwords or personal details.", 0], ["It must look nice.", 1], ["Gives a hint after 2 wrong answers.", 0], ["It should be easy.", 1]], "nest_q": [{"q": "What tells Python that a line is <b>inside</b> a loop or an if?", "o": ["The indentation (spaces at the start)", "A comma at the end", "Capital letters", "The line number"], "a": 0, "why": "Indented lines belong to the line above that ends with a colon."}, {"q": "An <code>if</code> inside a <code>for</code> loop is checked…", "o": ["every time the loop goes round", "only once", "never", "before the loop starts"], "a": 0, "why": "Everything inside the loop repeats, including the if."}], "watch_q": [{"q": "In the video, how many times does the inner loop run in total for 3 rows of 4?", "o": ["12", "7", "4", "3"], "a": 0, "why": "4 each time × 3 rows = 12."}, {"q": "Where does <code>print()</code> go to start a new row?", "o": ["Inside the outer loop, after the inner loop", "Inside the inner loop", "Before both loops", "It isn't needed"], "a": 0, "why": "It runs once per row, so it sits at the outer loop level."}], "ps_order": ["lives ← 3", "WHILE lives > 0", "    INPUT door", "    IF door = \"dragon\" THEN", "        lives ← lives - 1", "    END IF", "END WHILE", "OUTPUT \"Game over\""], "symbols": [["oval", "Start or end"], ["para", "Input or output"], ["rect", "Process: a step, like score + 1"], ["dia", "Decision: a yes or no question"], ["back", "Loop: go back up and repeat"]], "ms_order": ["Design", "Build and test version 1", "Modify and debug", "Showcase to your client"], "costs": [["A computer in the lab", 0], ["VS Code", 0], ["A younger class to test it", 0], ["Printing question cards", 1], ["Prizes for the winners", 1]], "risk_q": [{"q": "The computer lab is busy on build day. What is the best backup plan?", "o": ["Trace the plan on paper, then type it in VS Code at home", "Skip testing this time", "Start a different project", "Wait until next term"], "a": 0, "why": "A backup plan keeps the project moving without dropping a step."}], "ps": ["score ← 0", "FOR each question", "    INPUT guess", "    IF guess = answer THEN", "        score ← score + 1", "    ELSE", "        OUTPUT \"Wrong\"", "    END IF", "END FOR", "OUTPUT score"], "py": ["score = 0", "for q in questions:", "    guess = input(q)", "    if guess == answer:", "        score = score + 1", "    else:", "        print(\"Wrong\")", "print(score)"], "steps": [{"t": "Set up", "n": "The score starts at 0. This runs once, before the loop.", "ps": [0], "py": [0], "fc": "init"}, {"t": "The loop asks: another question?", "n": "This is the loop. If yes, we go inside it.", "ps": [1], "py": [1], "fc": "loopq"}, {"t": "Inside the loop: get a guess", "n": "Indented once: it runs every time round.", "ps": [2], "py": [2], "fc": "inp"}, {"t": "Nested decision: is it right?", "n": "An IF inside the loop. This is the nesting.", "ps": [3], "py": [3], "fc": "dec"}, {"t": "Yes path", "n": "Indented twice: only when the guess is right.", "ps": [4], "py": [4], "fc": "yes"}, {"t": "No path", "n": "ELSE: only when the guess is wrong.", "ps": [5, 6], "py": [5, 6], "fc": "no"}, {"t": "Back to the top", "n": "The arrow goes back up. The loop asks again.", "ps": [7, 8], "py": [1], "fc": "loopq"}, {"t": "Loop finished: show the score", "n": "No more questions, so we leave the loop. Runs once.", "ps": [9], "py": [7], "fc": "out"}], "dash": [{"ctx": ["for i in range(3):", "    if i == 1:", "▢"], "line": "print(\"one!\")", "job": "Print only when i is 1", "a": 2}, {"ctx": ["for i in range(3):", "    print(i)", "▢"], "line": "print(\"Done\")", "job": "Print once, after the loop", "a": 0}, {"ctx": ["for i in range(3):", "▢"], "line": "print(i)", "job": "Print every time round the loop", "a": 1}, {"ctx": ["if score > 5:", "▢"], "line": "print(\"Well done\")", "job": "Only when the score is over 5", "a": 1}, {"ctx": ["while lives > 0:", "    door = input()", "    if door == \"right\":", "▢"], "line": "lives = lives - 1", "job": "Lose a life only on the right door", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "▢"], "line": "score = score + 1", "job": "Add a point for each right guess", "a": 2}, {"ctx": ["for g in guesses:", "    if g == answer:", "        score = score + 1", "▢"], "line": "print(\"Score:\", score)", "job": "Show the score once, at the end", "a": 0}, {"ctx": ["▢", "for q in questions:", "    ..."], "line": "score = 0", "job": "Set up once, before the loop", "a": 0}, {"ctx": ["if age > 12:", "    print(\"Adult ticket\")", "else:", "▢"], "line": "print(\"Child ticket\")", "job": "Only when age is 12 or less", "a": 1}, {"ctx": ["while choice != \"3\":", "    choice = input()", "    if choice == \"1\":", "▢"], "line": "print(km * 0.621)", "job": "Convert only when the choice is 1", "a": 2}], "code": [{"id": "quiz", "proj": "Revision quiz", "title": "Mark the quiz", "goal": "For each guess, print <code>Correct!</code> or <code>Wrong!</code>, then the score. You need an <b>if inside a loop</b>.", "start": "answers = [\"vientiane\", \"30\", \"cold\"]\nguesses = [\"vientiane\", \"31\", \"cold\"]\nscore = 0\nfor i in range(3):\n    print(guesses[i])\nprint(\"Score:\", score)", "want": ["Correct!", "Wrong!", "Correct!", "Score: 2"], "hint": "Replace <code>print(guesses[i])</code> with <code>if guesses[i] == answers[i]:</code>. Under it, indented, print Correct! and add 1 to score. Then <code>else:</code> and print Wrong!"}, {"id": "conv", "proj": "Unit converter", "title": "Run the menu", "goal": "For each choice: <code>1</code> converts 10 km to miles, <code>2</code> converts 10 °C to °F, anything else prints <code>Goodbye</code>.", "start": "choices = [\"1\", \"2\", \"3\"]\nvalue = 10\nfor choice in choices:\n    print(\"You chose\", choice)", "want": ["10 km = 6.21 miles", "10 C = 50.0 F", "Goodbye"], "hint": "Inside the loop: <code>if choice == \"1\":</code> print <code>value, \"km =\", round(value * 0.621, 2), \"miles\"</code>. <code>elif choice == \"2\":</code> print <code>value, \"C =\", value * 9 / 5 + 32, \"F\"</code>. <code>else:</code> print Goodbye."}, {"id": "game", "proj": "Text game", "title": "Dragon doors", "goal": "Right door: lose a life and print <code>Dragon! Lives:</code> and the lives left. If lives reach 0, print <code>Game over</code>. Left door: print <code>Safe</code>.", "start": "doors = [\"left\", \"right\", \"right\"]\nlives = 2\nfor door in doors:\n    print(door)", "want": ["Safe", "Dragon! Lives: 1", "Dragon! Lives: 0", "Game over"], "hint": "<code>if door == \"right\":</code> then, indented, <code>lives = lives - 1</code> and print Dragon!. Add a second <code>if lives == 0:</code> with print Game over one more level in. <code>else:</code> print Safe."}], "debug": {"id": "debug", "title": "Fix the quiz marker", "goal": "This program has <b>two bugs</b>. Run it, read the error, fix it, then run it again.", "start": "answers = [\"vientiane\", \"30\", \"cold\"]\nguesses = [\"vientiane\", \"31\", \"cold\"]\nscore = 0\nfor i in range(3)\n    if guesses[i] == answers[i]:\n        print(\"Correct!\")\n        score = score + 1\n    else:\n        print(\"Wrong!\")\n    print(\"Score:\", score)", "want": ["Correct!", "Wrong!", "Correct!", "Score: 2"], "hint": "Bug 1: line 4 needs a colon at the end. Bug 2: the last line should show the score once, after the loop, so it needs no indent."}, "debug_q": [{"q": "Line 4 is missing its colon, so Python won't run at all. That is a…", "o": ["syntax error", "logic error", "test case", "milestone"], "a": 0, "why": "A syntax error breaks the rules of the language. Python stops and tells you the line."}, {"q": "After the colon is fixed, the score prints 3 times. Python gives no error. That is a…", "o": ["logic error", "syntax error", "boundary test", "client need"], "a": 0, "why": "A logic error runs, but does the wrong thing. You find it by comparing with the expected output."}], "modify": {"id": "modify", "title": "Add a win message", "goal": "Client feedback: <i>\"The younger pupils want to know when they win.\"</i> After the loop, if <code>lives</code> is more than 0, print <code>You win!</code>", "start": "doors = [\"left\", \"right\", \"left\"]\nlives = 2\nfor door in doors:\n    if door == \"right\":\n        lives = lives - 1\n        print(\"Dragon! Lives:\", lives)\n        if lives == 0:\n            print(\"Game over\")\n    else:\n        print(\"Safe\")", "want": ["Safe", "Dragon! Lives: 1", "Safe", "You win!"], "hint": "At the very end, with no indent: <code>if lives > 0:</code> and, indented once, <code>print(\"You win!\")</code>."}, "modify_q": [{"q": "Your game works. Before you change it for the client, what should you do first?", "o": ["Save a copy as version 1", "Delete the old code", "Change everything at once", "Skip testing"], "a": 0, "why": "If the change breaks something, you can go back to the version that worked."}], "tests": {"code": ["km = float(input(\"km: \"))", "if km < 0:", "    print(\"Can't be negative\")", "else:", "    print(round(km * 0.621, 2), \"miles\")"], "rows": [{"in": "10", "type": 0, "out": 0}, {"in": "0", "type": 1, "out": 1}, {"in": "-5", "type": 2, "out": 2}], "types": ["Normal", "Boundary", "Invalid"], "outs": ["6.21 miles", "0.0 miles", "Can't be negative"]}, "trace_q": [{"q": "How many times does the <code>if</code> line run?", "o": ["4 times, once per guess", "Once", "3 times", "Never"], "a": 0, "why": "It is inside the loop, so it runs for every guess."}, {"q": "How many times does <code>print(\"Wrong!\")</code> run?", "o": ["1 time", "4 times", "3 times", "0 times"], "a": 0, "why": "Only the \"no\" guess goes down the else path."}], "rb1": ["def turn_right():", "    turn_left()", "    turn_left()", "    turn_left()", "", "def jump():", "    turn_left()", "    move()", "    turn_right()", "    move()", "    turn_right()", "    move()", "    turn_left()", "", "while not at_goal():", "    if wall_in_front():", "        jump()", "    else:", "        move()"], "rb2": ["def jump():", "    turn_left()", "    while wall_on_right():", "        move()", "    turn_right()", "    move()", "    turn_right()", "    while front_is_clear():", "        move()", "    turn_left()"], "vocab": [["client", "the person or group you make the program for", "r"], ["user", "the person who uses the program", "r"], ["design brief", "the task you are given", "r"], ["survey", "questions you ask people", "r"], ["tally", "marks to count answers: ||||", "r"], ["data", "facts you collect", "r"], ["client needs", "what the client wants, found from data", "r"], ["contextual criteria", "specific, testable checks for this client", "r"], ["loop", "repeats steps (iteration)", "n"], ["selection", "chooses a path with IF", "n"], ["nested", "one structure inside another", "n"], ["indentation", "spaces that show what is inside what", "n"], ["pseudocode", "your plan in plain words", "n"], ["flowchart", "your plan as a picture", "n"], ["milestone", "a step in your plan, with a date", "n"], ["resources", "what you need: computer, paper, people", "n"], ["costs", "money you need: printing, prizes", "n"], ["trace", "follow code one line at a time", "x"], ["test case", "an input with its expected output", "x"], ["normal / boundary / invalid", "usual data / data at the edge / data that should be rejected", "x"], ["syntax error", "breaks the language rules, so the code won't run", "x"], ["logic error", "runs, but gives the wrong result", "x"], ["debug", "find and fix errors", "x"], ["modify", "change a feature after feedback", "x"], ["version", "a saved copy you can go back to", "x"]]};
 (function(){
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const store={get(k,d){try{const v=localStorage.getItem('y8lab2_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y8lab2_'+k,JSON.stringify(v))}catch(e){}}};
+const store={get(k,d){try{const v=localStorage.getItem('y8dr_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y8dr_'+k,JSON.stringify(v))}catch(e){}}};
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-/* code with coloured indent guides */
+const S=store.get('s',{p:{},t:{},done:{},dash:0,card:{}});['p','t','done','card'].forEach(k=>S[k]=S[k]||{});
+const save=()=>store.set('s',S);
 function codeHTML(lines){return lines.map((l,i)=>{const m=l.match(/^( *)(.*)$/);const n=Math.floor(m[1].length/4);let g='';for(let k=1;k<=n;k++)g+=`<span class="ind i${k}"></span>`;return `<span class="l" data-i="${i}">${g}${esc(m[2])}</span>`}).join('')}
-/* XP */
-const S=store.get('s',{xp:{},done:{},dash:0});
-const ZONES=[["start","What is nesting?",20],["three","Same idea, three ways",40],["watch","Watch: loops in loops",50],["trace","Trace it: Python Tutor",60],["code","Code: your project",150],["robot","Play: Reeborg's robot",100],["dash","Game: Indent Dash",150],["badges","Badges",0]];
-const MAX=ZONES.reduce((a,z)=>a+z[2],0);
-const RANKS=[[0,"Rookie"],[120,"Explorer"],[260,"Coder"],[400,"Nesting Ninja"],[520,"Nesting Master"]];
-const BADGES=[["three","🧭","Three Ways","Step through all 8 steps"],["watch","🎬","Watcher","Play the video and answer both"],["trace","🔍","Tracer","Answer both trace questions"],
- ["code1","💻","First Pass","Pass one coding challenge"],["code3","🏆","Project Ready","Pass all three challenges"],["robot","🤖","Robot Pilot","Finish Hurdle 3"],["dash","⚡","Indent Dasher","Score 80 or more in Indent Dash"]];
-const zxp=z=>Object.entries(S.xp).filter(([k])=>k.split(':')[0]===z).reduce((a,[,v])=>a+v,0);
-const total=()=>Object.values(S.xp).reduce((a,b)=>a+b,0);
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1800)}
-function addXP(key,n,msg){const cur=S.xp[key]||0;if(cur>=n)return;S.xp[key]=n;store.set('s',S);hud();toast(`+${n-cur} XP${msg?' · '+msg:''}`)}
-const has=id=>({three:S.done.three,watch:S.done['watch:0']&&S.done['watch:1']&&S.done.yt,trace:S.done['trace:0']&&S.done['trace:1'],code1:CH.some(c=>S.done['code:'+c.id]),code3:CH.every(c=>S.done['code:'+c.id]),robot:S.done.rb1,dash:S.dash>=80})[id];
-let prevB=null;
-function hud(){const x=total();let r=RANKS[0],nx=null;RANKS.forEach((k,i)=>{if(x>=k[0]){r=k;nx=RANKS[i+1]||null}});
-  $('#xpn').textContent=x+' XP';$('#rank').textContent=r[1];$('#mbar').style.width=(nx?(x-r[0])/(nx[0]-r[0])*100:100)+'%';
-  const on=BADGES.filter(b=>has(b[0])).map(b=>b[0]);
-  $('#bdg').innerHTML=BADGES.map(b=>`<span class="${on.includes(b[0])?'on':''}" title="${b[2]}">${b[1]}</span>`).join('');
-  $('#blist').innerHTML=BADGES.map(b=>`<div class="${on.includes(b[0])?'on':''}"><b>${b[1]} ${b[2]}</b><span>${b[3]}</span></div>`).join('');
-  if(prevB&&on.length>prevB.length){const nb=BADGES.find(b=>on.includes(b[0])&&!prevB.includes(b[0]));setTimeout(()=>toast('New badge: '+nb[2]),1900)}prevB=on;
-  $$('#rail button').forEach(b=>{const z=b.dataset.z,zz=ZONES.find(q=>q[0]===z);const got=zxp(z);b.classList.toggle('done',zz[2]>0&&got>=zz[2]);b.querySelector('.x').textContent=zz[2]?`${got}/${zz[2]}`:''})}
-/* nav */
-$('#rail').innerHTML=ZONES.map((z,i)=>`<button data-z="${z[0]}"><span class="k">${i+1}</span><span class="lbl">${z[1]}<span class="x"></span></span></button>`).join('');
-function go(z){$$('.zone').forEach(s=>s.classList.toggle('on',s.dataset.z===z));$$('#rail button').forEach(b=>b.classList.toggle('on',b.dataset.z===z));store.set('zone',z);window.scrollTo({top:0})}
-$$('#rail button').forEach(b=>b.onclick=()=>go(b.dataset.z));
-/* key words */
-const KW=[["loop","repeats the steps inside it"],["selection","chooses a path: if / elif / else"],["condition","a question that is True or False"],["nested","one structure inside another"],["indentation","spaces that show what is inside what"],["trace","follow code one line at a time"]];
-$('#kw').innerHTML=KW.map(([w,m])=>`<div><b>${w}</b><span>${m}</span></div>`).join('');
-/* questions: retry allowed */
-function qset(host,list,zone,xp){host.innerHTML='<div class="stack">'+list.map((q,i)=>`<div class="q" data-i="${i}"><p class="qq">${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="fbq"></div></div>`).join('')+'</div>';
-  host.querySelectorAll('.q').forEach(d=>{const i=+d.dataset.i,q=list[i],key=zone+':'+i;if(S.done[key])d.querySelector(`button[data-j="${q.a}"]`).classList.add('right');
-    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const ok=+b.dataset.j===q.a;
-      if(ok){d.querySelectorAll('button').forEach(x=>x.classList.remove('wrong'));b.classList.add('right');S.done[key]=1;addXP(key,xp,'correct')}else b.classList.add('wrong');
-      d.querySelector('.fbq').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?q.why:'Not quite. Try another answer.'}</div>`})})}
-qset($('#q-start'),QQ,'start',10);qset($('#q-watch'),WQ,'watch',20);qset($('#q-trace'),TQ,'trace',30);
-/* three ways stepper */
-$('#psCode').innerHTML=codeHTML(PS);$('#pyCode').innerHTML=codeHTML(PY);let st=0;
-function step(){const s=STEPS[st];$('#sT').textContent=`Step ${st+1}: ${s.t}`+(/[?.]$/.test(s.t)?"":".");$('#sN').textContent=s.n;$('#sNum').textContent=`${st+1} / ${STEPS.length}`;
-  $$('#psCode .l').forEach(l=>l.classList.toggle('hl',s.ps.includes(+l.dataset.i)));$$('#pyCode .l').forEach(l=>l.classList.toggle('hl',s.py.includes(+l.dataset.i)));
-  $$('svg.fc .n').forEach(n=>n.classList.toggle('hl',n.id==='fc-'+s.fc));$('#sPrev').disabled=st===0;$('#sNext').textContent=st===STEPS.length-1?'Start again':'Next step →';
-  if(st===STEPS.length-1&&!S.done.three){S.done.three=1;addXP('three:all',40,'all steps')}}
-$('#sNext').onclick=()=>{st=st===STEPS.length-1?0:st+1;step()};$('#sPrev').onclick=()=>{if(st>0){st--;step()}};step();
-/* embeds */
-const frame=(id,src,h,title)=>{$(id).innerHTML=`<iframe src="${src}" style="height:${h}px" loading="lazy" allow="fullscreen" title="${title}"></iframe>`};
-$('#ytLoad').onclick=()=>{$('#ytFrame').innerHTML='<div style="position:relative;aspect-ratio:16/9;max-width:100%"><iframe src="https://www.youtube-nocookie.com/embed/APWy6Pc83gE?rel=0&autoplay=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Nested loops video"></iframe></div>';S.done.yt=1;addXP('watch:yt',10,'video')};
-$('#ptLoad').onclick=()=>frame('#ptFrame',PT,520,'Python Tutor');
-$('#rbLoad').onclick=()=>frame('#rbFrame',REEBORG,620,"Reeborg's World");
-/* Reeborg missions */
-$('#rb1').innerHTML=codeHTML(["def turn_right():","    turn_left()","    turn_left()","    turn_left()","","def jump():","    turn_left()","    move()","    turn_right()","    move()","    turn_right()","    move()","    turn_left()","","while not at_goal():","    if wall_in_front():","        jump()","    else:","        move()"]);
-$('#rb2').innerHTML=codeHTML(["def jump():","    turn_left()","    while wall_on_right():","        move()","    turn_right()","    move()","    turn_right()","    while front_is_clear():","        move()","    turn_left()"]);
-$('#rbHint').onclick=()=>{$('#rb2').hidden=!$('#rb2').hidden;$('#rbHint').textContent=$('#rb2').hidden?'Show the boss hint':'Hide the boss hint'};
-$('#rbDone').innerHTML=[["rb1","Hurdle 3 done",50],["rb2","Hurdle 4 done",50]].map(([k,t,x])=>`<button class="btn ghost sm" data-k="${k}" data-x="${x}">${t}</button>`).join('');
-const rbSync=()=>$$('#rbDone button').forEach(b=>{if(S.done[b.dataset.k]){b.textContent='✓ '+b.textContent.replace('✓ ','');b.disabled=true}});rbSync();
-$$('#rbDone button').forEach(b=>b.onclick=()=>{S.done[b.dataset.k]=1;addXP('robot:'+b.dataset.k,+b.dataset.x,'mission');rbSync()});
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700)}
+/* ---------- scoring ---------- */
+const REG={};let curCard=null;
+function reg(key,max){REG[key]={max,part:curCard.part,card:curCard.id}}
+function award(key,ok,pts){/* pts optional: direct value */const r=REG[key];if(pts!==undefined){if(pts>(S.p[key]||0)){S.p[key]=pts;save();refresh();toast(`+${pts} pts`)}return}
+  if(!ok){S.t[key]=(S.t[key]||0)+1;save();return}
+  const got=S.t[key]?Math.ceil(r.max/2):r.max;if(got>(S.p[key]||0)){const add=got-(S.p[key]||0);S.p[key]=got;save();refresh();toast(`+${add} pts`)}}
+const partMax=p=>Object.values(REG).filter(r=>r.part===p).reduce((a,r)=>a+r.max,0);
+const partGot=p=>Object.entries(REG).filter(([,r])=>r.part===p).reduce((a,[k])=>a+(S.p[k]||0),0);
+const cardMax=c=>Object.values(REG).filter(r=>r.card===c).reduce((a,r)=>a+r.max,0);
+const cardGot=c=>Object.entries(REG).filter(([,r])=>r.card===c).reduce((a,[k])=>a+(S.p[k]||0),0);
+const cardDone=c=>Object.entries(REG).filter(([,r])=>r.card===c).every(([k])=>S.p[k]>0);
+/* ---------- activity renderers ---------- */
+function mcq(host,list,key,each=10){host.innerHTML='<div class="stack">'+list.map((q,i)=>`<div class="q" data-i="${i}"><p class="qq">${q.q}</p><div class="opts">${shuffle(q.o.map((o,j)=>[o,j])).map(([o,j])=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}</div><div class="fb"></div></div>`).join('')+'</div>';
+  list.forEach((q,i)=>reg(`${key}:${i}`,each));
+  $$('.q',host).forEach(d=>{const i=+d.dataset.i,q=list[i],k=`${key}:${i}`;if(S.p[k])$(`button[data-j="${q.a}"]`,d).classList.add('right');
+    $$('button',d).forEach(b=>b.onclick=()=>{if(S.p[k]&&+b.dataset.j===q.a)return;const ok=+b.dataset.j===q.a;
+      if(ok){$$('button',d).forEach(x=>x.classList.remove('wrong'));b.classList.add('right')}else b.classList.add('wrong');
+      award(k,ok);$('.fb',d).className='fb '+(ok?'ok':'no');$('.fb',d).innerHTML=ok?q.why:'Not quite. Try another answer.'})})}
+function order(host,items,key,max,mono){reg(key,max);let ans=[],pool=shuffle(items.map((t,i)=>i));
+  if(S.p[key]){ans=items.map((t,i)=>i);pool=[]}
+  const lab=i=>mono?`<span class="mono">${esc(items[i])}</span>`:esc(items[i]);
+  host.innerHTML=`<div class="ord stack"><div class="ans" aria-label="Your order"></div><div class="pool" aria-label="Steps to place"></div><div class="row"><button class="btn sm chk">Check</button><button class="btn ghost sm rst">Start again</button></div><div class="fb"></div></div>`;
+  const A=$('.ans',host),P=$('.pool',host),fb=$('.fb',host);
+  function draw(marks){A.innerHTML=ans.length?ans.map((i,p)=>`<button data-i="${i}" class="${marks?(marks[p]?'right':'wrong'):''}">${lab(i)}</button>`).join(''):'<span class="empty">Tap the steps below in order.</span>';
+    P.innerHTML=pool.length?pool.map(i=>`<button data-i="${i}">${lab(i)}</button>`).join(''):'<span class="empty">All placed. Press Check.</span>';
+    $$('button',A).forEach(b=>b.onclick=()=>{ans=ans.filter(x=>x!==+b.dataset.i);pool.push(+b.dataset.i);fb.innerHTML='';fb.className='fb';draw()});
+    $$('button',P).forEach(b=>b.onclick=()=>{pool=pool.filter(x=>x!==+b.dataset.i);ans.push(+b.dataset.i);draw()})}
+  $('.chk',host).onclick=()=>{if(pool.length){fb.className='fb no';fb.textContent='Place every step first.';return}
+    const marks=ans.map((i,p)=>items[i]===items[p]);const ok=marks.every(Boolean);draw(marks);award(key,ok);
+    fb.className='fb '+(ok?'ok':'no');fb.textContent=ok?'All in the right order.':`${marks.filter(Boolean).length} of ${items.length} are in the right place. Tap the red ones to move them.`};
+  $('.rst',host).onclick=()=>{ans=[];pool=shuffle(items.map((t,i)=>i));fb.innerHTML='';fb.className='fb';draw()};draw()}
+function match(host,pairs,key,each,symbols){const opts=shuffle(pairs.map((p,i)=>i));pairs.forEach((p,i)=>reg(`${key}:${i}`,each));
+  host.innerHTML=`<div class="mt">${pairs.map((p,i)=>`<label class="mrow" data-i="${i}"><b>${symbols?SYM[p[0]]+'<span class="note">shape '+(i+1)+'</span>':esc(p[0])}</b><select aria-label="Meaning"><option value="">Choose…</option>${opts.map(j=>`<option value="${j}">${esc(pairs[j][1])}</option>`).join('')}</select></label>`).join('')}</div><div class="row" style="margin-top:12px"><button class="btn sm chk">Check</button></div><div class="fb" style="margin-top:10px"></div>`;
+  $$('.mrow',host).forEach(r=>{const i=+r.dataset.i;if(S.p[`${key}:${i}`]){$('select',r).value=i;r.classList.add('right')}$('select',r).onchange=()=>r.classList.remove('right','wrong')});
+  $('.chk',host).onclick=()=>{let n=0,blank=0;$$('.mrow',host).forEach(r=>{const i=+r.dataset.i,v=$('select',r).value;if(v===''){blank++;return}const ok=+v===i;if(ok)n++;r.classList.toggle('right',ok);r.classList.toggle('wrong',!ok);award(`${key}:${i}`,ok)});
+    const fb=$('.fb',host);fb.className='fb '+(n===pairs.length?'ok':'no');fb.textContent=n===pairs.length?'All matched.':`${n} of ${pairs.length} right${blank?`, ${blank} not chosen yet`:''}. Change the red ones and check again.`}}
+function sorter(host,items,key,each,labels,whys){items.forEach((it,i)=>reg(`${key}:${i}`,each));
+  host.innerHTML=`<div class="srt">${items.map((it,i)=>`<div class="sitem" data-i="${i}"><span>${esc(it[0])}</span><div class="sb">${labels.map((l,j)=>`<button data-j="${j}">${l}</button>`).join('')}</div><span class="why" hidden></span></div>`).join('')}</div>`;
+  $$('.sitem',host).forEach(d=>{const i=+d.dataset.i,it=items[i],k=`${key}:${i}`;const show=ok=>{d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);const w=$('.why',d);w.hidden=false;w.textContent=ok?(whys?whys[it[1]]:'Right.'):'Not this one. Try the other button.'};
+    if(S.p[k])show(true);$$('button',d).forEach(b=>b.onclick=()=>{if(S.p[k])return;const ok=+b.dataset.j===it[1];show(ok);award(k,ok)})})}
+function tally(host){const SUB=["Maths","Science","English"],ans=D.survey;reg('tally',15);let k=0,c=[0,0,0],miss=0;
+  host.innerHTML=`<div class="saybox"><span class="who" aria-hidden="true">🙋</span><span><span class="note">Pupil <span class="pn">1</span> of ${ans.length} said</span><br><b class="say"></b></span></div><div class="tally">${SUB.map((s,i)=>`<button class="trow" data-i="${i}"><b>${s}</b><span class="mk"></span><span class="tt">0</span></button>`).join('')}</div><div class="fb"></div><div class="row"><button class="btn ghost sm again" hidden>Tally again</button></div>`;
+  const fb=$('.fb',host);
+  const marks=n=>'||||'.repeat(Math.floor(n/5)).replace(/\|\|\|\|/g,'<s>||||</s> ')+'|'.repeat(n%5);
+  function draw(){$$('.trow',host).forEach((r,i)=>{$('.mk',r).innerHTML=marks(c[i]);$('.tt',r).textContent=c[i]});
+    if(k<ans.length){$('.pn',host).textContent=k+1;$('.say',host).textContent=ans[k]}else{$('.say',host).textContent='Done!';$('.pn',host).textContent=ans.length;
+      const pts=Math.max(5,15-miss*3);award('tally',true,pts);if(!S.p.tally||S.p.tally<pts){}fb.className='fb ok';fb.innerHTML=`All 8 tallied${miss?` (${miss} wrong tap${miss>1?'s':''})`:''}. Maths has the most: 4 out of 8.`;$('.again',host).hidden=false}}
+  $$('.trow',host).forEach(r=>r.onclick=()=>{if(k>=ans.length)return;const i=+r.dataset.i;if(SUB[i]===ans[k]){c[i]++;k++;draw()}else{miss++;r.classList.remove('shake');void r.offsetWidth;r.classList.add('shake');fb.className='fb no';fb.textContent='Check the answer, then tap its row.'}});
+  $('.again',host).onclick=()=>{k=0;c=[0,0,0];miss=0;fb.className='fb';fb.textContent='';$('.again',host).hidden=true;draw()};
+  if(S.p.tally){c=[4,2,2];k=ans.length;fb.className='fb ok';fb.textContent='Tally done. Maths has the most: 4 out of 8.';$('.again',host).hidden=false;$$('.trow',host).forEach((r,i)=>{$('.mk',r).innerHTML=marks(c[i]);$('.tt',r).textContent=c[i]});$('.say',host).textContent='Done!';$('.pn',host).textContent=8}else draw()}
+function three(host){reg('three',20);let st=0,view=0;
+  host.innerHTML=`<div class="row"><button class="btn ghost sm prv">← Back</button><button class="btn sm nxt">Next step →</button><span class="note sn" style="font-weight:700"></span></div><div class="stepnote"><b class="t"></b> <span class="n"></span></div>
+   <div class="seg" role="tablist"><button class="on" data-v="0">Pseudocode</button><button data-v="1">Python</button><button data-v="2">Flowchart</button></div>
+   <div class="three"><div class="on" data-v="0"><h3>Pseudocode</h3><pre class="code ps">${codeHTML(D.ps)}</pre></div><div data-v="1"><h3>Python</h3><pre class="code py">${codeHTML(D.py)}</pre></div><div data-v="2"><h3>Flowchart</h3>${FLOW}</div></div>`;
+  $$('.seg button',host).forEach(b=>b.onclick=()=>{view=+b.dataset.v;$$('.seg button',host).forEach(x=>x.classList.toggle('on',x===b));$$('.three>div',host).forEach(x=>x.classList.toggle('on',+x.dataset.v===view))});
+  function step(){const s=D.steps[st];$('.t',host).textContent=`Step ${st+1}: ${s.t}`+(/[?.]$/.test(s.t)?'':'.');$('.n',host).textContent=s.n;$('.sn',host).textContent=`${st+1} / ${D.steps.length}`;
+    $$('.ps .l',host).forEach(l=>l.classList.toggle('hl',s.ps.includes(+l.dataset.i)));$$('.py .l',host).forEach(l=>l.classList.toggle('hl',s.py.includes(+l.dataset.i)));
+    $$('svg.fc .n',host).forEach(n=>n.classList.toggle('hl',n.id==='fc-'+s.fc));$('.prv',host).disabled=st===0;$('.nxt',host).textContent=st===D.steps.length-1?'Start again':'Next step →';
+    if(st===D.steps.length-1)award('three',true)}
+  $('.nxt',host).onclick=()=>{st=st===D.steps.length-1?0:st+1;step()};$('.prv',host).onclick=()=>{if(st>0){st--;step()}};step()}
+function costQ(host){reg('cost',10);host.innerHTML=`<h3>3. Work out the cost</h3><p>You print <b>12 question cards</b> at <b>500 kip</b> each, and buy <b>3 prizes</b> at <b>5,000 kip</b> each. What is the total cost in kip?</p>
+  <div class="row"><input class="txt" inputmode="numeric" placeholder="Total in kip" aria-label="Total cost in kip" style="max-width:220px"><button class="btn sm">Check</button></div><div class="fb"></div>`;
+  const inp=$('input',host),fb=$('.fb',host);if(S.p.cost){inp.value='21,000';fb.className='fb ok';fb.textContent='Right: 6,000 + 15,000 = 21,000 kip.'}
+  $('button',host).onclick=()=>{const v=+inp.value.replace(/[^0-9.]/g,'');const ok=v===21000;award('cost',ok);fb.className='fb '+(ok?'ok':'no');
+    fb.textContent=ok?'Right: 6,000 + 15,000 = 21,000 kip.':(v===6000||v===15000?'That is only part of it. Add the cards and the prizes.':'Not quite. Work out the cards (12 × 500), then the prizes (3 × 5,000), then add.')}}
+function dash(host){reg('dash',40);host.innerHTML=`<div class="stack"><div class="dstat"><span>Score <span class="s">0</span></span><span class="t">45</span><span class="c">×1</span></div>
+  <div class="dcard"><p class="job">Press Start</p><pre class="code dc"></pre><div class="dbtns"><button data-i="0" disabled>No indent<small>line</small></button><button data-i="1" class="i1" disabled>1 level<small>····line</small></button><button data-i="2" class="i2" disabled>2 levels<small>········line</small></button></div><p class="res"></p></div>
+  <div class="row" style="justify-content:center"><button class="btn go">Start</button><span class="best" style="font-weight:700;color:var(--pts)"></span></div></div>`;
+  let dq=[],dk=0,ds=0,dt=45,tim=null,combo=0,lock=false;const IND=["","    ","        "],card=$('.dcard',host);
+  const showBest=()=>{if(S.dash)$('.best',host).textContent='Best: '+S.dash};showBest();
+  $('.dc',host).innerHTML=codeHTML(["for i in range(3):"])+'<span class="l"><span class="slot">print(i)</span></span>';
+  function show(){const it=dq[dk%dq.length];$('.job',host).textContent=it.job;$('.dc',host).innerHTML=it.ctx.map(l=>l==='▢'?`<span class="l"><span class="slot">${esc(it.line)}</span></span>`:codeHTML([l])).join('');card.className='dcard';$('.res',host).textContent=''}
+  function pick(i){if(!tim||lock)return;const it=dq[dk%dq.length],ok=i===it.a;if(ok){combo++;ds+=10*(combo>=3?2:1)}else combo=0;
+    $('.s',host).textContent=ds;$('.c',host).textContent=combo>=3?'×2':'×1';card.className='dcard '+(ok?'ok':'no');
+    $('.dc',host).innerHTML=it.ctx.map(l=>codeHTML([l==='▢'?IND[it.a]+it.line:l])).join('');
+    $('.res',host).textContent=ok?'Correct':'It needs '+['no indent','1 level','2 levels'][it.a];lock=true;setTimeout(()=>{lock=false;dk++;if(dk%dq.length===0)dq=shuffle(D.dash);if(tim)show()},ok?450:1100)}
+  function end(){clearInterval(tim);tim=null;$$('.dbtns button',host).forEach(b=>b.disabled=true);$('.go',host).disabled=false;$('.go',host).textContent='Play again';
+    S.dash=Math.max(S.dash||0,ds);save();$('.job',host).textContent=`Time's up. You scored ${ds}.`;showBest();award('dash',true,Math.min(40,Math.floor(S.dash/2)))}
+  $('.go',host).onclick=()=>{dq=shuffle(D.dash);dk=0;ds=0;dt=45;combo=0;$('.s',host).textContent=0;$('.t',host).textContent=45;$('.c',host).textContent='×1';$$('.dbtns button',host).forEach(b=>b.disabled=false);$('.go',host).disabled=true;show();
+    tim=setInterval(()=>{dt--;$('.t',host).textContent=dt;if(dt<=0)end()},1000)};
+  $$('.dbtns button',host).forEach(b=>b.onclick=()=>pick(+b.dataset.i));
+  document.addEventListener('keydown',e=>{if(tim&&['0','1','2'].includes(e.key))pick(+e.key)})}
 /* Python */
 let pyP=null;
-function py(){if(!pyP)pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PYODIDE_URL;s.onload=async()=>{try{const p=await loadPyodide();p.runPython(document.getElementById('harness').textContent);res(p)}catch(e){pyP=null;rej(e)}};s.onerror=()=>{pyP=null;rej(new Error('Python could not load. Check the internet, then press Run again.'))};document.head.appendChild(s)});return pyP}
-async function runPy(src){const p=await py();const f=p.globals.get('run_code');const r=f(src,p.toPy([]),true);const [o,e]=r.toJs();r.destroy();f.destroy();return {out:o,err:e}}
-let cur=0;const ed=$('#ed'),gut=$('#gut');
-function fit(){const n=ed.value.split('\n').length;gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');ed.rows=Math.max(7,n+1);store.set('code_'+CH[cur].id,ed.value)}
-ed.addEventListener('input',fit);
-ed.addEventListener('keydown',e=>{const s=ed.selectionStart,v=ed.value;if(e.key==='Tab'){e.preventDefault();ed.setRangeText('    ',s,ed.selectionEnd,'end');fit()}
-  else if(e.key==='Enter'){const ls=v.lastIndexOf('\n',s-1)+1,line=v.slice(ls,s);let ind=(line.match(/^ */)||[''])[0];if(/:\s*$/.test(line))ind+='    ';e.preventDefault();ed.setRangeText('\n'+ind,s,ed.selectionEnd,'end');fit()}});
-function tabs(){$('#chTabs').innerHTML=CH.map((c,i)=>`<button data-i="${i}" class="${i===cur?'on':''} ${S.done['code:'+c.id]?'done':''}"><small>${c.proj}</small>${S.done['code:'+c.id]?'✓ ':''}${c.title}</button>`).join('');$$('#chTabs button').forEach(b=>b.onclick=()=>{cur=+b.dataset.i;load()})}
-function load(){const c=CH[cur];$('#chT').textContent=c.title;$('#chG').innerHTML=c.goal;$('#chH').innerHTML=c.hint;$('#chH').hidden=true;$('#chHint').textContent='Show a hint';$('#chW').textContent=c.want.join('\n');ed.value=store.get('code_'+c.id,c.start);fit();$('#out').textContent='Output appears here.';$('#resetAsk').hidden=true;tabs()}
-$('#chHint').onclick=()=>{$('#chH').hidden=!$('#chH').hidden;$('#chHint').textContent=$('#chH').hidden?'Show a hint':'Hide the hint'};
-$('#reset').onclick=()=>{$('#resetAsk').hidden=false};$('#resetYes').onclick=()=>{ed.value=CH[cur].start;fit();$('#resetAsk').hidden=true};
-$('#run').onclick=async()=>{const o=$('#out');o.textContent='Running…';try{const r=await runPy(ed.value);
-  o.innerHTML=esc(r.out)+(r.err?`<span class="e">${r.out&&!r.out.endsWith('\n')?'\n':''}Error: ${esc(r.err)}</span>`:'');
-  const lines=r.out.replace(/\s+$/,'').split('\n').map(l=>l.replace(/\s+$/,''));const c=CH[cur];
-  if(!r.err&&lines.length===c.want.length&&lines.every((l,i)=>l===c.want[i])){S.done['code:'+c.id]=1;store.set('s',S);o.innerHTML+='\n<span class="ok">Challenge passed!</span>';addXP('code:'+c.id,50,'challenge passed');tabs()}
-  else if(!r.err)o.innerHTML+='\n<span class="e">Not the expected output yet. Compare it line by line.</span>'}catch(e){o.innerHTML=`<span class="e">${esc(e.message)}</span>`}};
-load();
-/* Indent Dash */
-let dq=[],dk=0,ds=0,dt=45,tim=null,combo=0,lock=false;const IND=["","    ","        "];
-function dShow(){const it=dq[dk%dq.length];$('#dJob').textContent=it.job;$('#dCode').innerHTML=it.ctx.map(l=>l==='▢'?`<span class="l"><span class="slot">${esc(it.line)}</span></span>`:codeHTML([l])).join('');$('#dCard').className='dcard';$('#dRes').textContent=''}
-function pick(i){if(!tim||lock)return;const it=dq[dk%dq.length],ok=i===it.a;if(ok){combo++;ds+=10*(combo>=3?2:1)}else combo=0;
-  $('#dS').textContent=ds;$('#dC').textContent=combo>=3?'×2':'×1';$('#dCard').className='dcard '+(ok?'ok':'no');
-  $('#dCode').innerHTML=it.ctx.map(l=>codeHTML([l==='▢'?IND[it.a]+it.line:l])).join('');
-  $('#dRes').textContent=ok?'Correct':'It needs '+['no indent','1 level','2 levels'][it.a];lock=true;setTimeout(()=>{lock=false;dk++;if(dk%dq.length===0)dq=shuffle(DASH);if(tim)dShow()},ok?450:1100)}
-function dEnd(){clearInterval(tim);tim=null;$$('.dbtns button').forEach(b=>b.disabled=true);$('#dGo').disabled=false;$('#dGo').textContent='Play again';
-  S.dash=Math.max(S.dash||0,ds);store.set('s',S);$('#dJob').textContent=`Time's up. You scored ${ds}.`;$('#dBest').textContent='Best: '+S.dash;addXP('dash:best',Math.min(150,S.dash),'Indent Dash')}
-$('#dGo').onclick=()=>{dq=shuffle(DASH);dk=0;ds=0;dt=45;combo=0;$('#dS').textContent=0;$('#dT').textContent=45;$('#dC').textContent='×1';$$('.dbtns button').forEach(b=>b.disabled=false);$('#dGo').disabled=true;dShow();
-  tim=setInterval(()=>{dt--;$('#dT').textContent=dt;if(dt<=0)dEnd()},1000)};
-$$('.dbtns button').forEach(b=>b.onclick=()=>pick(+b.dataset.i));
-document.addEventListener('keydown',e=>{if(tim&&['0','1','2'].includes(e.key))pick(+e.key)});
-$('#dCode').innerHTML=codeHTML(["for i in range(3):"])+'<span class="l"><span class="slot">print(i)</span></span>';if(S.dash)$('#dBest').textContent='Best: '+S.dash;
-/* share */
+function py(){if(!pyP)pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PYODIDE_URL;s.onload=async()=>{try{const p=await loadPyodide();p.runPython(document.getElementById('harness').textContent);res(p)}catch(e){pyP=null;rej(e)}};s.onerror=()=>{pyP=null;rej(new Error('Python could not load. Check the internet, then try again.'))};document.head.appendChild(s)});return pyP}
+async function runPy(src,inputs){const p=await py();const f=p.globals.get('run_code');const r=f(src,p.toPy(inputs||[]),false);const [o,e]=r.toJs();r.destroy();f.destroy();return {out:o,err:e}}
+function editor(host,list,key,each){/* list of challenges; tabs if >1 */let cur=0;list.forEach(c=>reg(`${key}:${c.id}`,each));
+  host.innerHTML=`${list.length>1?'<div class="tabs"></div>':''}<div class="box stack"><h3 class="ct"></h3><p class="cg"></p><div><p class="eyebrow">Expected output</p><pre class="want"></pre></div><div class="row"><button class="btn ghost sm hb">Show a hint</button></div><p class="hint" hidden></p></div>
+   <div class="stack"><div class="edw"><div class="gut"></div><textarea class="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Python code"></textarea></div>
+   <div class="tools"><button data-t="in" title="Indent the line">Indent →</button><button data-t="out" title="Remove one indent">← Outdent</button><button data-t="sv">Save version</button><button data-t="ld" hidden>Load saved version</button><button data-t="rs">Reset</button><span class="note vmsg"></span></div>
+   <div class="row"><button class="btn run">▶ Run</button></div><pre class="out">Output appears here. The first run loads Python, which takes a few seconds.</pre></div>`;
+  const ed=$('textarea',host),gut=$('.gut',host),out=$('.out',host);
+  const ck=()=>'code_'+list[cur].id;
+  function fit(){const n=ed.value.split('\n').length;gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');ed.rows=Math.max(6,n+1);store.set(ck(),ed.value)}
+  ed.addEventListener('input',fit);
+  ed.addEventListener('keydown',e=>{const s=ed.selectionStart,v=ed.value;if(e.key==='Tab'){e.preventDefault();ed.setRangeText('    ',s,ed.selectionEnd,'end');fit()}
+    else if(e.key==='Enter'){const ls=v.lastIndexOf('\n',s-1)+1,line=v.slice(ls,s);let ind=(line.match(/^ */)||[''])[0];if(/:\s*$/.test(line))ind+='    ';e.preventDefault();ed.setRangeText('\n'+ind,s,ed.selectionEnd,'end');fit()}});
+  function shiftLine(dir){const s=ed.selectionStart,v=ed.value,ls=v.lastIndexOf('\n',s-1)+1;if(dir>0){ed.setRangeText('    ',ls,ls,'preserve');ed.selectionStart=ed.selectionEnd=s+4}else{const m=v.slice(ls).match(/^ {1,4}/);if(m){ed.setRangeText('',ls,ls+m[0].length,'preserve');ed.selectionStart=ed.selectionEnd=Math.max(ls,s-m[0].length)}}ed.focus();fit()}
+  const vk=()=>'ver_'+list[cur].id;
+  function vmsg(){const v=store.get(vk(),null);$('[data-t="ld"]',host).hidden=!v;$('.vmsg',host).textContent=v?'Version saved at '+v.at:''}
+  $$('.tools button',host).forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.onclick=()=>{const t=b.dataset.t;
+    if(t==='in')shiftLine(1);else if(t==='out')shiftLine(-1);
+    else if(t==='sv'){store.set(vk(),{code:ed.value,at:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});vmsg();toast('Version saved');S.done['ver_'+list[cur].id]=1;save()}
+    else if(t==='ld'){const v=store.get(vk(),null);if(v){ed.value=v.code;fit();toast('Saved version loaded')}}
+    else if(t==='rs'){if(b.dataset.sure){ed.value=list[cur].start;fit();delete b.dataset.sure;b.textContent='Reset'}else{b.dataset.sure=1;b.textContent='Tap again to reset';setTimeout(()=>{delete b.dataset.sure;b.textContent='Reset'},2500)}}}});
+  function tabs(){if(list.length<2)return;$('.tabs',host).innerHTML=list.map((c,i)=>`<button data-i="${i}" class="${i===cur?'on':''} ${S.p[`${key}:${c.id}`]?'done':''}"><small>${c.proj}</small>${S.p[`${key}:${c.id}`]?'✓ ':''}${c.title}</button>`).join('');$$('.tabs button',host).forEach(b=>b.onclick=()=>{cur=+b.dataset.i;load()})}
+  function load(){const c=list[cur];$('.ct',host).textContent=c.title;$('.cg',host).innerHTML=c.goal;$('.hint',host).innerHTML=c.hint;$('.hint',host).hidden=true;$('.hb',host).textContent='Show a hint';$('.want',host).textContent=c.want.join('\n');ed.value=store.get(ck(),c.start);fit();out.textContent='Output appears here.';vmsg();tabs()}
+  $('.hb',host).onclick=()=>{const h=$('.hint',host);h.hidden=!h.hidden;$('.hb',host).textContent=h.hidden?'Show a hint':'Hide the hint'};
+  $('.run',host).onclick=async()=>{out.textContent='Running…';try{const r=await runPy(ed.value);
+    out.innerHTML=esc(r.out)+(r.err?`<span class="e">${r.out&&!r.out.endsWith('\n')?'\n':''}Error: ${esc(r.err)}</span>`:'');
+    const lines=r.out.replace(/\s+$/,'').split('\n').map(l=>l.replace(/\s+$/,''));const c=list[cur];
+    if(!r.err&&lines.length===c.want.length&&lines.every((l,i)=>l===c.want[i])){out.innerHTML+='\n<span class="ok">Passed! It matches the expected output.</span>';award(`${key}:${c.id}`,true);tabs()}
+    else if(!r.err){out.innerHTML+='\n<span class="e">Not the expected output yet. Compare it line by line.</span>'}}catch(e){out.innerHTML=`<span class="e">${esc(e.message)}</span>`}};
+  load()}
+function tests(host){const T=D.tests;T.rows.forEach((r,i)=>{reg(`tt:${i}`,5);reg(`to:${i}`,5)});
+  host.innerHTML=`<div class="ttab">${T.rows.map((r,i)=>`<div class="trc" data-i="${i}"><div class="hd"><span>Test ${i+1}</span><span>Input <code>${r.in}</code></span></div><div class="two"><div><label>Kind of data</label><select class="ty"><option value="">Choose…</option>${T.types.map((t,j)=>`<option value="${j}">${t}</option>`).join('')}</select></div><div><label>Expected output</label><select class="ou"><option value="">Choose…</option>${T.outs.map((t,j)=>`<option value="${j}">${esc(t)}</option>`).join('')}</select></div></div><div class="act"></div></div>`).join('')}</div>
+   <div class="row" style="margin-top:12px"><button class="btn sm chk">Check my table</button><button class="btn ghost sm run">▶ Run the tests</button></div><div class="fb" style="margin-top:10px"></div>`;
+  $$('.trc',host).forEach(d=>{const i=+d.dataset.i,r=T.rows[i];if(S.p[`tt:${i}`])$('.ty',d).value=r.type;if(S.p[`to:${i}`])$('.ou',d).value=r.out});
+  $('.chk',host).onclick=()=>{let n=0,tot=0,blank=0;$$('.trc',host).forEach(d=>{const i=+d.dataset.i,r=T.rows[i],ty=$('.ty',d).value,ou=$('.ou',d).value;
+      if(ty===''||ou===''){blank++;return}const a=+ty===r.type,b=+ou===r.out;award(`tt:${i}`,a);award(`to:${i}`,b);n+=a+b;tot+=2;d.classList.toggle('right',a&&b);d.classList.toggle('wrong',!(a&&b))});
+    const fb=$('.fb',host);if(blank){fb.className='fb no';fb.textContent='Fill in every box first.';return}
+    fb.className='fb '+(n===tot?'ok':'no');fb.innerHTML=n===tot?'Your table is right. 0 is a <b>boundary</b>: the smallest distance allowed. Now press Run the tests.':`${n} of ${tot} boxes right. Change the red rows and check again.`};
+  $('.run',host).onclick=async()=>{const fb=$('.fb',host);fb.className='fb';fb.textContent='Running the tests…';
+    try{const src=T.code.join('\n');for(const d of $$('.trc',host)){const i=+d.dataset.i,r=T.rows[i];const res=await runPy(src,[r.in]);const last=(res.err||res.out.trim().split('\n').pop()).replace(/^km: \S+\s*/,'');
+      const exp=T.outs[r.out];$('.act',d).innerHTML=`Actual output: <code>${esc(last)}</code> ${last===exp?'<b>✓ pass</b>':''}`}
+      fb.className='fb ok';fb.textContent='All three tests pass. Next week, keep a table like this for your own project.'}catch(e){fb.className='fb no';fb.textContent=e.message}}}
+function robot(host){[["rb1","Hurdle 3",10],["rb2","Hurdle 4",10]].forEach(([k,t,x])=>reg('robot:'+k,x));
+  host.innerHTML=[["rb1","Hurdle 3 done"],["rb2","Hurdle 4 done"]].map(([k,t])=>`<button class="btn ghost sm" data-k="${k}">${t}</button>`).join('');
+  const sync=()=>$$('button',host).forEach(b=>{if(S.p['robot:'+b.dataset.k]){b.textContent='✓ '+b.textContent.replace('✓ ','');b.disabled=true}});sync();
+  $$('button',host).forEach(b=>b.onclick=()=>{award('robot:'+b.dataset.k,true);sync()})}
+function embed(el,kind){const b=$('button',el);b.onclick=()=>{
+  if(kind==='yt'){el.innerHTML='<div style="position:relative;aspect-ratio:16/9;max-width:100%"><iframe src="https://www.youtube-nocookie.com/embed/APWy6Pc83gE?rel=0&autoplay=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Nested loops video"></iframe></div>'}
+  else el.innerHTML=`<iframe src="${kind==='pt'?PT:REEBORG}" style="height:${kind==='pt'?560:620}px" loading="lazy" allow="fullscreen" title="${kind==='pt'?'Python Tutor':"Reeborg's World"}"></iframe>`}}
+/* ---------- build cards ---------- */
+const CARDS=[];
+D.parts.forEach(p=>{let i=0,t;while((t=document.getElementById(`T-${p.id}-${i}`))){CARDS.push({id:`${p.id}-${i}`,part:p.id,idx:i,t});i++}});
+const host=$('#cards');
+CARDS.forEach(c=>{curCard=c;const sec=document.createElement('section');sec.className='card wrap';sec.dataset.card=c.id;sec.appendChild(c.t.content.cloneNode(true));host.appendChild(sec);c.el=sec;
+  if(c.id==='p2-3')sec.classList.add('widecard');
+  $$('[data-code]',sec).forEach(e=>e.innerHTML=codeHTML(e.dataset.code==='tests'?D.tests.code:D[e.dataset.code]));
+  $$('[data-embed]',sec).forEach(e=>embed(e,e.dataset.embed));
+  $$('[data-act]',sec).forEach(e=>{const [k,a]=e.dataset.act.split(':');
+    if(k==='order'){if(a==='steps')order(e,D.order_steps.items,'steps',15);else if(a==='ps')order(e,D.ps_order,'psorder',20,true);else order(e,D.ms_order,'ms',10)}
+    else if(k==='match'){if(a==='words')match(e,D.match_words,'words',4);else match(e,D.symbols,'sym',4,true)}
+    else if(k==='sort'){if(a==='criteria')sorter(e,D.criteria,'crit',4,['Good: testable','Too vague'],['Specific, and you can check it.','Too vague to test. Fun or nice for who? How would you check it?']);else sorter(e,D.costs,'costs',4,['Free resource','Costs money'],['A resource you already have, at no cost.','This costs money, so it goes in your costs.'])}
+    else if(k==='mcq'){const m={need:[[D.need_q],'need',10],nest:[D.nest_q,'nest',10],watch:[D.watch_q,'watch',10],risk:[D.risk_q,'risk',10],trace:[D.trace_q,'trace',10],debug:[D.debug_q,'dbq',10],modify:[D.modify_q,'mdq',10]}[a];mcq(e,m[0],m[1],m[2])}
+    else if(k==='tally')tally(e);else if(k==='three')three(e);else if(k==='cost')costQ(e);else if(k==='dash')dash(e);else if(k==='tests')tests(e);else if(k==='robot')robot(e);
+    else if(k==='code'){if(a==='main')editor(e,D.code,'code',30);else if(a==='debug')editor(e,[D.debug],'debug',30);else editor(e,[D.modify],'modify',30)}});
+  const dn=document.createElement('p');dn.className='done-note';dn.hidden=true;dn.textContent='✓ Activity complete';sec.appendChild(dn)});
+curCard=null;
+const MAX=Object.values(REG).reduce((a,r)=>a+r.max,0);
+/* ---------- views ---------- */
+$('#vocab').innerHTML=D.vocab.map(([w,m,t])=>`<div class="vc ${t}"><b>${esc(w)}</b><span>${esc(m)}</span></div>`).join('');
+function partCards(){$('#parts').innerHTML=D.parts.map(p=>{const g=partGot(p.id),m=partMax(p.id),cs=CARDS.filter(c=>c.part===p.id),dn=cs.filter(c=>cardDone(c.id)).length;
+  return `<button class="pc" data-p="${p.id}" style="--pc:var(${p.col});--pcbg:var(${p.col}bg)"><span class="num">${p.n}</span><span><span class="eyebrow">Part ${p.n}</span><h2>${p.name}</h2><p>${p.sub}</p><span class="pbar"><i style="width:${m?g/m*100:0}%"></i></span><span class="meta"><span>${dn} of ${cs.length} done</span><b>${g} / ${m} pts</b></span></span></button>`}).join('');
+  $$('.pc').forEach(b=>b.onclick=()=>{location.hash=b.dataset.p})}
+function refresh(){const t=Object.keys(REG).reduce((a,k)=>a+(S.p[k]||0),0);$('#total').innerHTML=`${t}<small>/ ${MAX} pts</small>`;
+  partCards();$('#scoretab').innerHTML=D.parts.map(p=>`<div><span>Part ${p.n}: ${p.name}</span><b>${partGot(p.id)} / ${partMax(p.id)}</b></div>`).join('')+`<div><span><b>Total</b></span><b>${t} / ${MAX}</b></div>`;
+  CARDS.forEach(c=>{const pe=$('[data-pts]',c.el);if(pe)pe.textContent=`${cardGot(c.id)} / ${cardMax(c.id)} pts`;$('.done-note',c.el).hidden=!cardDone(c.id)});
+  if(cp)dots()}
+let cp=null,ci=0;
+function dots(){const cs=CARDS.filter(c=>c.part===cp);$('#dots').innerHTML=cs.map((c,i)=>`<button data-i="${i}" class="${i===ci?'on':''} ${cardDone(c.id)?'done':''}" aria-label="Activity ${i+1}">${cardDone(c.id)?'✓':i+1}</button>`).join('');
+  $$('#dots button').forEach(b=>b.onclick=()=>show(+b.dataset.i))}
+function show(i){const cs=CARDS.filter(c=>c.part===cp);ci=Math.max(0,Math.min(cs.length-1,i));S.card[cp]=ci;save();
+  CARDS.forEach(c=>c.el.classList.toggle('on',c.part===cp&&c.idx===ci));dots();const p=D.parts.find(x=>x.id===cp);
+  $('#bPos').textContent=`${ci+1} of ${cs.length}`;$('#bPrev').disabled=ci===0;
+  const nextP=D.parts[D.parts.indexOf(p)+1];$('#bNext').textContent=ci<cs.length-1?'Next →':(nextP?`Part ${nextP.n} →`:'Finish ✓');
+  const on=$('#dots button.on');if(on)on.scrollIntoView({block:'nearest',inline:'center'});window.scrollTo({top:0})}
+function route(){const h=location.hash.slice(1);const p=D.parts.find(x=>x.id===h);document.body.classList.toggle('inpart',!!p);
+  $('#vHome').hidden=!!p;$('#vPart').hidden=!p;$('#bnav').hidden=!p;
+  if(p){cp=p.id;$('#vPart').style.cssText=`--pc:var(${p.col});--pcbg:var(${p.col}bg)`;$('#bnav').style.cssText=$('#vPart').style.cssText;
+    $('#topT').textContent=`Part ${p.n}: ${p.name}`;$('#ptag').textContent=p.sub;show(S.card[cp]||0)}
+  else{cp=null;$('#topT').textContent='Design Project Homework';CARDS.forEach(c=>c.el.classList.remove('on'));refresh();window.scrollTo({top:0})}}
+$('#homeBtn').onclick=()=>{if(location.hash)location.hash='';};
+$('#bPrev').onclick=()=>show(ci-1);
+$('#bNext').onclick=()=>{const cs=CARDS.filter(c=>c.part===cp);if(ci<cs.length-1)show(ci+1);else{const p=D.parts.find(x=>x.id===cp),n=D.parts[D.parts.indexOf(p)+1];location.hash=n?n.id:'';if(!n)setTimeout(()=>$('#sendBox').scrollIntoView({behavior:'smooth'}),60)}};
+window.addEventListener('hashchange',route);
+/* ---------- send ---------- */
 $('#nm').value=store.get('nm','');$('#cls').value=store.get('cls','');$('#nm').oninput=e=>store.set('nm',e.target.value.trim());$('#cls').oninput=e=>store.set('cls',e.target.value.trim());
 $('#send').onclick=async()=>{const m=$('#sendMsg'),nm=store.get('nm',''),cl=store.get('cls','');if(!nm||!cl){m.textContent='Type your name and class first.';return}
-  const data={"Year":"Year 8 (W11)","Name":nm,"Class":cl,"Total stars":total()+" / "+MAX,"XP":total(),"Rank":$('#rank').textContent,"Badges":BADGES.filter(b=>has(b[0])).map(b=>b[2]).join(', ')||'none',
-    "Coding challenges passed":CH.filter(c=>S.done['code:'+c.id]).map(c=>c.title).join(', ')||'none',"Robot missions":["rb1","rb2"].filter(k=>S.done[k]).map(k=>k==='rb1'?'Hurdle 3':'Hurdle 4').join(', ')||'none',"Indent Dash best":S.dash||0,"Sent from":location.href.split('?')[0]};
-  $('#send').disabled=true;m.textContent='Sending…';try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});m.textContent='Sent. Keep exploring!'}catch(e){m.textContent='Could not send. Check the internet and try again.'}finally{$('#send').disabled=false}};
-hud();go(store.get('zone','start'));
+  const t=Object.keys(REG).reduce((a,k)=>a+(S.p[k]||0),0);const pp=id=>`${partGot(id)} / ${partMax(id)}`;
+  const data={"Year":"Year 8 (W11)","Name":nm,"Class":cl,"Total stars":t+" / "+MAX,"Percent":Math.round(t/MAX*100)+"%",
+    "Part 1 Review (stations 1-3)":pp('p1'),"Part 2 New (stations 4-7)":pp('p2'),"Part 3 Get ready (Design Project II)":pp('p3'),
+    "Activities done":CARDS.filter(c=>cardDone(c.id)).length+" / "+CARDS.length,
+    "Coding passed":[...D.code.map(c=>['code:'+c.id,c.title]),['debug:debug','Debug'],['modify:modify','Modify']].filter(([k])=>S.p[k]).map(x=>x[1]).join(', ')||'none',
+    "Indent Dash best":S.dash||0,"Robot missions":['rb1','rb2'].filter(k=>S.p['robot:'+k]).map(k=>k==='rb1'?'Hurdle 3':'Hurdle 4').join(', ')||'none',"Sent from":location.href.split(/[?#]/)[0]};
+  $('#send').disabled=true;m.textContent='Sending…';try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});m.textContent=`Sent: ${t} / ${MAX} pts. Well done.`}catch(e){m.textContent='Could not send. Check the internet and try again.'}finally{$('#send').disabled=false}};
+refresh();route();
 })();
 </script>
 </body>
