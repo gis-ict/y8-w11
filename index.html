@@ -82,7 +82,7 @@ input.txt{width:100%;background:var(--bg);border:2px solid var(--line);border-ra
 .dots button{flex:none;min-width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-variant-numeric:tabular-nums}
 .dots button.on{border-color:var(--pc);color:var(--pc);box-shadow:0 0 0 2px var(--pc) inset}
 .dots button.done{background:var(--pc);border-color:var(--pc);color:var(--surface)}
-.card{display:none;flex-direction:column;gap:16px;padding-block:6px 120px}.card.on{display:flex}
+.card{display:none;flex-direction:column;gap:16px;padding-block:6px 170px}.card.on{display:flex}
 .chead{display:flex;flex-direction:column;gap:6px}
 .chips{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--surface2);color:var(--muted)}
 .chip.rev{background:var(--p1bg);color:var(--p1)}.chip.new{background:var(--p2bg);color:var(--p2)}.chip.nxt{background:var(--p3bg);color:var(--p3)}.chip.pts{background:none;border:2px solid var(--line);color:var(--pts)}
@@ -194,6 +194,28 @@ pre.want{background:var(--bg);border:2px dashed var(--line);border-radius:12px;p
 .toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
 .done-note{display:flex;gap:10px;align-items:center;background:var(--goodbg);border-radius:12px;padding:10px 14px;font-weight:700}
 .done-note[hidden]{display:none}
+/* talking helper bot (original design) */
+.bot{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:35;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}
+.inpart .bot{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+.bot>*{pointer-events:auto}
+.botbtn{width:68px;height:68px;border-radius:50%;border:3px solid var(--accent);background:var(--surface);padding:4px;box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center}
+.botbtn svg{width:100%;height:100%}
+.bp{width:min(330px,calc(100vw - 32px));background:var(--surface);border:2px solid var(--accent);border-radius:18px 18px 4px 18px;padding:14px;box-shadow:0 6px 24px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:10px}
+.bp[hidden]{display:none}
+.brow{display:flex;gap:8px;align-items:flex-end}
+.gear{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font-size:18px;line-height:1;color:var(--muted);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.cap{pointer-events:none!important;max-width:min(300px,calc(100vw - 32px));background:var(--ink);color:var(--surface);border-radius:16px 16px 4px 16px;padding:8px 12px;font-size:16px;line-height:1.4;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.cap span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cap[hidden]{display:none}
+.bp label{display:flex;gap:8px;align-items:center;font-size:16px}.bp input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent)}
+.bp .hd{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-weight:800;font-size:18px}
+.bp .x{background:none;border:0;font-size:24px;line-height:1;padding:2px 6px;color:var(--muted)}
+.rb-face{fill:var(--code-bg)}.rb-head{fill:var(--surface2);stroke:var(--accent);stroke-width:3}.rb-eye{fill:var(--p1);transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+.rb-mouth{fill:var(--pts);transform-box:fill-box;transform-origin:center;transform:scaleY(.35)}.talking .rb-mouth{animation:talk .22s infinite alternate}
+.rb-ant{stroke:var(--accent);stroke-width:3}.rb-ball{fill:var(--pts)}.talking .rb-ball{animation:glow .5s infinite alternate}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes talk{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+@keyframes glow{from{opacity:.4}to{opacity:1}}
+.speak{background:none;border:2px solid var(--line);border-radius:10px;padding:2px 8px;font-size:15px;font-weight:700;color:var(--muted);margin-left:6px;vertical-align:middle}
 @media (min-width:700px){
   .parts{grid-template-columns:repeat(3,minmax(0,1fr))}.pc{grid-template-columns:1fr;align-items:start}
   .sitem{grid-template-columns:minmax(0,1fr) 260px;align-items:center}.sitem .why{grid-column:1/-1}
@@ -242,6 +264,16 @@ pre.want{background:var(--bg);border:2px dashed var(--line);border-radius:12px;p
 </section>
 </main>
 <nav class="bnav" id="bnav" hidden><div class="wrap"><button class="btn ghost sm" id="bPrev">← Back</button><span class="pos" id="bPos"></span><button class="btn tone sm nx" id="bNext">Next →</button></div></nav>
+<div class="bot" id="bot" hidden>
+  <div class="bp" id="bp" hidden role="dialog" aria-label="Robot helper">
+    <div class="hd"><span>Robot voice settings</span><button class="x" id="bpX" aria-label="Close">×</button></div>
+    <p class="note">Tap the robot to hear this page. Tap it again to stop.</p>
+    <label><input type="checkbox" id="bAuto"> Read my feedback out loud</label>
+    <label><input type="checkbox" id="bSlow"> Speak more slowly</label>
+  </div>
+  <p class="cap" id="bCap" hidden></p>
+  <div class="brow"><button class="gear" id="bGear" aria-label="Robot voice settings" aria-expanded="false">⚙</button><button class="botbtn" id="botBtn" aria-label="Read this page out loud"><svg viewBox="0 0 64 64" aria-hidden="true"><line class="rb-ant" x1="32" y1="12" x2="32" y2="5"/><circle class="rb-ball" cx="32" cy="5" r="4"/><rect class="rb-head" x="6" y="12" width="52" height="40" rx="16"/><rect class="rb-face" x="13" y="19" width="38" height="25" rx="10"/><ellipse class="rb-eye" cx="24" cy="29" rx="4" ry="5"/><ellipse class="rb-eye" cx="40" cy="29" rx="4" ry="5"/><rect class="rb-mouth" x="25" y="36" width="14" height="5" rx="2.5"/><rect x="24" y="52" width="16" height="7" rx="3" class="rb-head"/></svg></button></div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <template id="T-p1-0"><div class="chead"><div class="chips"><span class="chip rev">Station 1 · Review</span><span class="chip pts" data-pts></span></div><h2>The design steps</h2>
@@ -570,7 +602,7 @@ function show(i){const cs=CARDS.filter(c=>c.part===cp);ci=Math.max(0,Math.min(cs
   CARDS.forEach(c=>c.el.classList.toggle('on',c.part===cp&&c.idx===ci));dots();const p=D.parts.find(x=>x.id===cp);
   $('#bPos').textContent=`${ci+1} of ${cs.length}`;$('#bPrev').disabled=ci===0;
   const nextP=D.parts[D.parts.indexOf(p)+1];$('#bNext').textContent=ci<cs.length-1?'Next →':(nextP?`Part ${nextP.n} →`:'Finish ✓');
-  const on=$('#dots button.on');if(on)on.scrollIntoView({block:'nearest',inline:'center'});window.scrollTo({top:0})}
+  const on=$('#dots button.on');if(on)on.scrollIntoView({block:'nearest',inline:'center'});window.scrollTo({top:0});if(window.__botStop)window.__botStop()}
 function route(){const h=location.hash.slice(1);const p=D.parts.find(x=>x.id===h);document.body.classList.toggle('inpart',!!p);
   $('#vHome').hidden=!!p;$('#vPart').hidden=!p;$('#bnav').hidden=!p;
   if(p){cp=p.id;$('#vPart').style.cssText=`--pc:var(${p.col});--pcbg:var(${p.col}bg)`;$('#bnav').style.cssText=$('#vPart').style.cssText;
@@ -590,6 +622,32 @@ $('#send').onclick=async()=>{const m=$('#sendMsg'),nm=store.get('nm',''),cl=stor
     "Coding passed":[...D.code.map(c=>['code:'+c.id,c.title]),['debug:debug','Debug'],['modify:modify','Modify']].filter(([k])=>S.p[k]).map(x=>x[1]).join(', ')||'none',
     "Indent Dash best":S.dash||0,"Robot missions":['rb1','rb2'].filter(k=>S.p['robot:'+k]).map(k=>k==='rb1'?'Hurdle 3':'Hurdle 4').join(', ')||'none',"Sent from":location.href.split(/[?#]/)[0]};
   $('#send').disabled=true;m.textContent='Sending…';try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});m.textContent=`Sent: ${t} / ${MAX} pts. Well done.`}catch(e){m.textContent='Could not send. Check the internet and try again.'}finally{$('#send').disabled=false}};
+/* ---------- talking helper ---------- */
+const SY=window.speechSynthesis;
+if(SY&&window.SpeechSynthesisUtterance){$('#bot').hidden=false;
+  let voice=null;const pickV=()=>{const v=SY.getVoices();voice=v.find(x=>/en-GB/i.test(x.lang)&&/female|libby|sonia|serena|kate|google uk/i.test(x.name))||v.find(x=>/en-GB/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null};pickV();if('onvoiceschanged' in SY)SY.onvoiceschanged=pickV;
+  const bot=$('#bot'),bp=$('#bp'),cap=$('#bCap');const auto=$('#bAuto'),slow=$('#bSlow');
+  auto.checked=store.get('bauto',false);slow.checked=store.get('bslow',false);auto.onchange=()=>store.set('bauto',auto.checked);slow.onchange=()=>store.set('bslow',slow.checked);
+  const clean=t=>t.replace(/\s+/g,' ').replace(/←/g,' becomes ').replace(/×/g,' times ').replace(/==/g,' equals ').replace(/\|{2,}/g,' ').trim();
+  let talking=false,capT=null;
+  function capShow(t,ms){cap.innerHTML='<span>'+esc(t)+'</span>';cap.hidden=false;clearTimeout(capT);if(ms)capT=setTimeout(()=>cap.hidden=true,ms)}
+  function stop(){SY.cancel();talking=false;bot.classList.remove('talking');cap.hidden=true;$('#botBtn').setAttribute('aria-label','Read this page out loud')}
+  function speak(t){if(!t)return;SY.cancel();const u=new SpeechSynthesisUtterance(clean(t));if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-GB';u.rate=slow.checked?.8:1;
+    u.onstart=()=>{talking=true;bot.classList.add('talking');$('#botBtn').setAttribute('aria-label','Stop reading')};u.onend=u.onerror=()=>{talking=false;bot.classList.remove('talking');cap.hidden=true;$('#botBtn').setAttribute('aria-label','Read this page out loud')};
+    capShow(t);SY.speak(u)}
+  function pageText(){if(!cp)return [$('#vHome h1').textContent,$('#vHome .lead').textContent,'Choose a part to start.'].join('. ');
+    const el=CARDS.find(c=>c.part===cp&&c.idx===ci).el;const end=x=>/[.?!:]$/.test(x.trim())?x.trim():x.trim()+'.';const parts=[end($('h2',el).textContent),$('.intro',el)?.textContent||''];
+    const q=$$('.q',el).find(d=>!$('.opt.right',d));if(q)parts.push('Question: '+$('.qq',q).textContent+' The choices are: '+$$('.opt',q).map(b=>b.textContent).join('. Or, ')+'.');
+    else if($('.sitem:not(.right)',el)){const it=$('.sitem:not(.right)',el);parts.push('Next one: '+end(it.firstElementChild.textContent)+' Is it '+$$('button',it).map(b=>b.textContent).join(', or ')+'?')}
+    return parts.join(' ')}
+  $('#botBtn').onclick=()=>{if(talking)stop();else speak(pageText())};
+  $('#bGear').onclick=()=>{const open=bp.hidden;bp.hidden=!open;$('#bGear').setAttribute('aria-expanded',open)};
+  $('#bpX').onclick=()=>{bp.hidden=true;$('#bGear').setAttribute('aria-expanded',false)};
+  if(!store.get('bhello',false)){setTimeout(()=>capShow('Tap me and I will read the page out loud.',4500),800);store.set('bhello',true)}
+  /* read feedback aloud when switched on */
+  const seen=new WeakMap();new MutationObserver(ms=>{if(!auto.checked)return;for(const m of ms){const t=m.target.nodeType===1?m.target:m.target.parentElement;const f=t&&t.closest&&t.closest('.fb,.why,.res');if(f&&f.textContent.trim()&&seen.get(f)!==f.textContent){seen.set(f,f.textContent);speak(f.textContent);break}}}).observe($('#cards'),{childList:true,subtree:true,characterData:true});
+  window.addEventListener('hashchange',stop);window.__botStop=stop;
+}
 refresh();route();
 })();
 </script>
